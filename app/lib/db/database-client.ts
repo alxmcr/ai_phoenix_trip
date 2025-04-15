@@ -1,4 +1,4 @@
-import './envConfig.ts'
+import '@/envConfig.ts'
 import postgres from 'postgres';
 
 const env = process.env.NODE_ENV || 'development';
