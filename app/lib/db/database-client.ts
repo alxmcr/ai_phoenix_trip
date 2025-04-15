@@ -1,5 +1,6 @@
 import '@/envConfig.ts'
 import postgres from 'postgres';
+console.log("🚀 ~ process.env.NODE_ENV:", process.env.NODE_ENV)
 
 const env = process.env.NODE_ENV || 'development';
 
