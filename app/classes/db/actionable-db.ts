@@ -17,7 +17,6 @@ export class ActionableDB
     const [review] = await sql<ReviewData[]>`
       SELECT * FROM review WHERE review_id = ${item.review_id}
     `;
-    console.log("🚀 ~ create ~ review:", review);
 
     if (!review) {
       throw new Error("Review not found");
@@ -32,7 +31,6 @@ export class ActionableDB
   }
 
   async read(id: string): Promise<ActionableData | null> {
-    console.log("🚀 ~ read ~ id:", id);
     const [actionable] = await sql<ActionableData[]>`
       SELECT * FROM actionable WHERE actionable_id = ${id}
     `;

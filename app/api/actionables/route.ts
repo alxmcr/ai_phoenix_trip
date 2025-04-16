@@ -39,7 +39,6 @@ export async function POST(request: Request) {
     }
 
     // Return the new actionable
-    console.log("🚀 ~ returnnewResponse ~ newActionable:", newActionable)
     return new Response(JSON.stringify(newActionable), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
