@@ -1,5 +1,4 @@
 import { ActionableData } from "@/app/types/db/actionable";
-import { ReviewData } from "@/app/types/db/review";
 import { validate as validateUUID } from "uuid";
 
 export class ValidationActionable {
