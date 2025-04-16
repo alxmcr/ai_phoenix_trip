@@ -1,99 +1,61 @@
+// POST request: create an Review
+
 import { ReviewDB } from "@/app/classes/db/review-db";
-import { NextRequest } from "next/server";
-import { validate as validateUUID } from "uuid";
 import { HTTPResponseCode } from "@/app/enums/http-response-code";
 
-// Helper database
 const dbReview = new ReviewDB();
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const id = (await params).id;
+export async function GET(request: Request) {
+  // get the page and limit from the request
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
 
-  // Validate UUID
-  if (!validateUUID(id)) {
-    return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
-      status: HTTPResponseCode.BAD_REQUEST,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+  const Reviews = await dbReview.paginate(page, limit);
 
-  const rowReview = await dbReview.read(id);
-
-  // If the Review is not found, return a 404 error
-  if (!rowReview) {
-    return new Response(JSON.stringify({ error: "Review not found" }), {
-      status: HTTPResponseCode.NOT_FOUND,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  // If the Review is found, return the Review
-  return new Response(JSON.stringify(rowReview), {
-    status: HTTPResponseCode.OK,
+  return new Response(JSON.stringify(Reviews), {
+    status: 200,
     headers: { "Content-Type": "application/json" },
   });
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const id = (await params).id;
-
-  // Validate UUID
-  if (!validateUUID(id)) {
-    return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
-      status: HTTPResponseCode.BAD_REQUEST,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  const isDeleted = await dbReview.delete(id);
-
-  // If the Review is not found, return a 404 error
-  if (!isDeleted) {
-    return new Response(JSON.stringify({ error: "Review not found" }), {
-      status: HTTPResponseCode.NOT_FOUND,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  // If the Review is deleted, return a 204 no content
-  return new Response(null, { status: HTTPResponseCode.NOT_CONTENT });
-}
-
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const id = (await params).id;
-
-  // Validate UUID
-  if (!validateUUID(id)) {
-    return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
-      status: HTTPResponseCode.BAD_REQUEST,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
+export async function POST(request: Request) {
+  // Parse the request body
   const body = await request.json();
 
-  const updatedReview = await dbReview.update(id, body);
+  try {
+    //Insert new Review into your DB
+    const newReview = await dbReview.create(body);
 
-  // If the Review is not found, return a 404 error
-  if (!updatedReview) {
-    return new Response(JSON.stringify({ error: "Review not found" }), {
-      status: HTTPResponseCode.NOT_FOUND,
+    // check if newAction is not null or undefined
+    if (!newReview) {
+      return new Response(
+        JSON.stringify({ error: "Failed to create Review" }),
+        {
+          status: HTTPResponseCode.BAD_REQUEST,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Return the new Review
+    return new Response(JSON.stringify(newReview), {
+      status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
     });
-  }
+  } catch (err) {
+    if (err instanceof Error) {
+      return new Response(JSON.stringify({ error: err.message }), {
+        status: HTTPResponseCode.BAD_REQUEST,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-  // If the Review is deleted, return a 204 no content
-  return new Response(JSON.stringify(updatedReview), {
-    status: HTTPResponseCode.OK,
-    headers: { "Content-Type": "application/json" },
-  });
+    return new Response(
+      JSON.stringify({ error: "An unknown error occurred" }),
+      {
+        status: HTTPResponseCode.INTERNAL_SERVER_ERROR,
+      }
+    );
+  }
 }
