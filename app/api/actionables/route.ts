@@ -6,7 +6,12 @@ import { HTTPResponseCode } from "@/app/enums/http-response-code";
 const dbActionable = new ActionableDB();
 
 export async function GET(request: Request) {
-  const actionables = await dbActionable.paginate(1, 10);
+  // get the page and limit from the request
+  const { searchParams } = new URL(request.url);
+  const page = searchParams.get("page") || "1";
+  const limit = searchParams.get("limit") || "10";
+
+  const actionables = await dbActionable.paginate(page, limit);
 
   return new Response(JSON.stringify(actionables), {
     status: 200,
