@@ -3,7 +3,14 @@ import { ActionableData } from "@/app/types/db/actionable";
 import { RecommendationData } from "@/app/types/db/recommendation";
 import { ReviewData } from "@/app/types/db/review";
 import { SentimentData } from "@/app/types/db/sentiment";
+import { ActionableDB } from "../db/actionable-db";
+import { RecommendationDB } from "../db/recommendation-db";
+import { SentimentDB } from "../db/sentiment-db";
 import { ValidationReview } from "../models/validation-review";
+
+const dbActionable = new ActionableDB();
+const dbSentiment = new SentimentDB();
+const dbRecommendation = new RecommendationDB();
 
 export class ManagerOpenAI {
   // Analyze the review
@@ -73,12 +80,19 @@ export class ManagerOpenAI {
       },
     ];
 
+    // Insert the actionables, sentiments and recommendations into the database
+    const actionablesDB = await dbActionable.insertMany(actionables);
+    const sentimentsDB = await dbSentiment.insertMany(sentiments);
+    const recommendationsDB = await dbRecommendation.insertMany(
+      recommendations
+    );
+
     // Build the response
     const response: ReviewAIResponse = {
       review_id: review.review_id,
-      actionables: actionables,
-      sentiments: sentiments,
-      recommendations: recommendations,
+      actionables: actionablesDB,
+      sentiments: sentimentsDB,
+      recommendations: recommendationsDB,
     };
 
     return response;
