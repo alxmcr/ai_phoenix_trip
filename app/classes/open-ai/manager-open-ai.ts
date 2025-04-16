@@ -15,9 +15,10 @@ export class ManagerOpenAI {
       throw new Error("Review is not valid");
     }
 
-    // Analyze the review
+    // Analyze the review with OpenAI
 
     // Add extra information to the review
+
     // a. Relationship between review and actionable
     // Mock actionable
     const actionables: Partial<ActionableData>[] = [
@@ -29,7 +30,12 @@ export class ManagerOpenAI {
         review_id: review.review_id,
         action_text: "Actionable 2",
       },
+      {
+        review_id: review.review_id,
+        action_text: "Actionable 3",
+      },
     ];
+
     // b. Relationship between review and sentiment
     // Mock sentiment
     const sentiments: Partial<SentimentData>[] = [
@@ -42,6 +48,7 @@ export class ManagerOpenAI {
         sentiment_text: "Sentiment 2",
       },
     ];
+
     // c. Relationship between review and recommendation
     // Mock recommendation
     const recommendations: Partial<RecommendationData>[] = [
@@ -57,9 +64,13 @@ export class ManagerOpenAI {
         review_id: review.review_id,
         recommendation_text: "Recommendation 3",
       },
+      {
+        review_id: review.review_id,
+        recommendation_text: "Recommendation 4",
+      },
     ];
-    // Build the response
 
+    // Build the response
     const response: ReviewAIResponse = {
       review_id: review.review_id,
       actionable: actionables,
