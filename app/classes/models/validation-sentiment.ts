@@ -8,19 +8,25 @@ export class ValidationSentiment {
       throw new Error("Sentiment not found");
     }
 
+    const emptyFields: string[] = [];
+
     // Check if the sentiment is valid
     if (!validateUUID(sentiment.sentiment_id)) {
-      throw new Error("Sentiment ID is not valid");
+      emptyFields.push("sentiment_id");
     }
 
     // Check if the review id is valid
     if (!validateUUID(sentiment.review_id)) {
-      throw new Error("Review ID is not valid");
+      emptyFields.push("review_id");
     }
 
     // Check if sentiment text is valid
     if (!sentiment.sentiment_text) {
-      throw new Error("Sentiment text is not valid");
+      emptyFields.push("sentiment_text");
+    }
+
+    if (emptyFields.length > 0) {
+      throw new Error(`The following fields are empty: ${emptyFields.join(", ")}`);
     }
 
     return true;

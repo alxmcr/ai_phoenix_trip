@@ -8,19 +8,25 @@ export class ValidationRecommendation {
       throw new Error("Recommendation not found");
     }
 
+    const emptyFields: string[] = [];
+
     // check if the recommendation id is valid
     if (!validateUUID(recommendation.recommendation_id)) {
-      throw new Error("Recommendation ID is not valid");
+      emptyFields.push("recommendation_id");
     }
 
     // check if the review id is valid
     if (!validateUUID(recommendation.review_id)) {
-      throw new Error("Review ID is not valid");
+      emptyFields.push("review_id");
     }
 
     // check if the recommendation text is valid
     if (!recommendation.recommendation_text) {
-      throw new Error("Recommendation text is not valid");
+      emptyFields.push("recommendation_text");
+    }
+
+    if (emptyFields.length > 0) {
+      throw new Error(`The following fields are empty: ${emptyFields.join(", ")}`);
     }
 
     return true;
