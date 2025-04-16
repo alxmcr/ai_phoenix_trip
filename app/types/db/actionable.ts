@@ -1,5 +1,5 @@
 export interface ActionableData {
-  actionable_id: number;
+  actionable_id: string;
   action_text: string;
-  review_id: number; // Foreign key to Review
+  review_id: string; // Foreign key to Review
 }

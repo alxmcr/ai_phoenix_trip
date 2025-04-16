@@ -1,5 +1,5 @@
 export interface RecommendationData {
-  recommendation_id: number;
+  recommendation_id: string;
   recommendation_text: string;
-  review_id: number; // Foreign key to Review
+  review_id: string; // Foreign key to Review
 }

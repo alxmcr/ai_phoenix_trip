@@ -1,5 +1,5 @@
 export interface SentimentData {
-  sentiment_id: number;
+  sentiment_id: string;
   sentiment_text: string;
-  review_id: number; // Foreign key to Review
+  review_id: string; // Foreign key to Review
 }
