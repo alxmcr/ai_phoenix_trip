@@ -24,15 +24,15 @@ export class ManagerOpenAI {
     const actionables: Partial<ActionableData>[] = [
       {
         review_id: review.review_id,
-        action_text: "Actionable 1",
+        action_text: `"Actionable 1 (review_id: ${review.review_id})"`,
       },
       {
         review_id: review.review_id,
-        action_text: "Actionable 2",
+        action_text: `"Actionable 2 (review_id: ${review.review_id})"`,
       },
       {
         review_id: review.review_id,
-        action_text: "Actionable 3",
+        action_text: `"Actionable 3 (review_id: ${review.review_id})"`,
       },
     ];
 
@@ -41,11 +41,11 @@ export class ManagerOpenAI {
     const sentiments: Partial<SentimentData>[] = [
       {
         review_id: review.review_id,
-        sentiment_text: "Sentiment 1",
+        sentiment_text: `"Sentiment 1 (review_id: ${review.review_id})"`,
       },
       {
         review_id: review.review_id,
-        sentiment_text: "Sentiment 2",
+        sentiment_text: `"Sentiment 2 (review_id: ${review.review_id})"`,
       },
     ];
 
@@ -54,19 +54,19 @@ export class ManagerOpenAI {
     const recommendations: Partial<RecommendationData>[] = [
       {
         review_id: review.review_id,
-        recommendation_text: "Recommendation 1",
+        recommendation_text: `"Recommendation 1 (review_id: ${review.review_id})"`,
       },
       {
         review_id: review.review_id,
-        recommendation_text: "Recommendation 2",
+        recommendation_text: `"Recommendation 2 (review_id: ${review.review_id})"`,
       },
       {
         review_id: review.review_id,
-        recommendation_text: "Recommendation 3",
+        recommendation_text: `"Recommendation 3 (review_id: ${review.review_id})"`,
       },
       {
         review_id: review.review_id,
-        recommendation_text: "Recommendation 4",
+        recommendation_text: `"Recommendation 4 (review_id: ${review.review_id})"`,
       },
     ];
 
