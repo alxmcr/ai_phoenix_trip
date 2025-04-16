@@ -24,7 +24,7 @@ export class ManagerOpenAI {
 
     // check if the review fields are empty
     if (ValidationReview.validateInsertReview(review)) {
-      throw new Error("There are fields that are empty");
+      throw new Error("Review: there are fields that are empty");
     }
 
     // Analyze the review with OpenAI
