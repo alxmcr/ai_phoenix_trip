@@ -1,7 +1,6 @@
-// POST request: create an Review
-
 import { ReviewDB } from "@/app/classes/db/review-db";
 import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { validate as validateUUID } from "uuid";
 
 const dbReview = new ReviewDB();
 
@@ -36,6 +35,16 @@ export async function POST(request: Request) {
           headers: { "Content-Type": "application/json" },
         }
       );
+    }
+
+    // Validate UUID
+    const reviewId = newReview.review_id;
+
+    if (!validateUUID(reviewId)) {
+      return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
+        status: HTTPResponseCode.BAD_REQUEST,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Return the new Review
