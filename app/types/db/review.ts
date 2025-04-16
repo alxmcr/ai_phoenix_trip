@@ -1,5 +1,5 @@
 export interface ReviewData {
-  review_id: number;
+  review_id: string;
   trip_date: string; // ISO format date
   transport_mode: string;
   company_name: string;
