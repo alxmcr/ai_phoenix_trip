@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   try {
     //Insert new actionable into your DB
-    const newActionable = await dbActionable.create(body);
+    const newActionable = await dbActionable.insert(body);
 
     // check if newAction is not null or undefined
     if (!newActionable) {

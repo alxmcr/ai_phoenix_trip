@@ -10,7 +10,7 @@ export class RecommendationDB
   DBOperations<RecommendationData>,
   Pagination<RecommendationData>,
   Filters<RecommendationData> {
-  async create(item: RecommendationData): Promise<RecommendationData> {
+  async insert(item: RecommendationData): Promise<RecommendationData> {
     const [newRecommendation] = await sql<RecommendationData[]>`
       INSERT INTO recommendation (recommendation_text, review_id)
       VALUES (${item.recommendation_text}, ${item.review_id})

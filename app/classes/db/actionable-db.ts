@@ -12,7 +12,7 @@ export class ActionableDB
     Pagination<ActionableData>,
     Filters<ActionableData>
 {
-  async create(item: ActionableData): Promise<ActionableData> {
+  async insert(item: ActionableData): Promise<ActionableData> {
     // Check if the review_id exists
     const [review] = await sql<ReviewData[]>`
       SELECT * FROM review WHERE review_id = ${item.review_id}

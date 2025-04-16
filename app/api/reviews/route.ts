@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   try {
     //Insert new Review into your DB
-    const newReview = await dbReview.create(body);
+    const newReview = await dbReview.insert(body);
 
     // check if newAction is not null or undefined
     if (!newReview) {

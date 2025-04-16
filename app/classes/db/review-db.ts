@@ -10,7 +10,7 @@ export class ReviewDB
   DBOperations<ReviewData>,
   Pagination<ReviewData>,
   Filters<ReviewData> {
-  async create(item: ReviewData): Promise<ReviewData> {
+  async insert(item: ReviewData): Promise<ReviewData> {
     const [newReview] = await sql<ReviewData[]>`
       INSERT INTO review (trip_date, transport_mode, company_name, origin, destination, email, rating, review_text)
       VALUES (${item.trip_date}, ${item.transport_mode}, ${item.company_name}, ${item.origin}, ${item.destination}, ${item.email}, ${item.rating}, ${item.review_text})

@@ -11,7 +11,7 @@ export class SentimentDB
     Pagination<SentimentData>,
     Filters<SentimentData>
 {
-  async create(item: SentimentData): Promise<SentimentData> {
+  async insert(item: SentimentData): Promise<SentimentData> {
     const [newSentiment] = await sql<SentimentData[]>`
       INSERT INTO sentiment (sentiment_text, review_id)
       VALUES (${item.sentiment_text}, ${item.review_id})
