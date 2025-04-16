@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   try {
     //Insert new Sentiment into your DB
-    const newSentiment = dbSentiment.create(body);
+    const newSentiment = await dbSentiment.create(body);
 
     // check if newAction is not null or undefined
     if (!newSentiment) {
