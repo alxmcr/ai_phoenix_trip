@@ -11,7 +11,17 @@ export class SentimentDB
     Pagination<SentimentData>,
     Filters<SentimentData>
 {
-  async insert(item: SentimentData): Promise<SentimentData> {
+  async insert(item: Partial<SentimentData>): Promise<SentimentData> {
+    // Check if the sentiment text is valid
+    if (!item.sentiment_text) {
+      throw new Error("Sentiment Text is required");
+    }
+
+    // Check if the review id is valid
+    if (!item.review_id) {
+      throw new Error("Review ID is required");
+    }
+
     const [newSentiment] = await sql<SentimentData[]>`
       INSERT INTO sentiment (sentiment_text, review_id)
       VALUES (${item.sentiment_text}, ${item.review_id})
@@ -20,7 +30,7 @@ export class SentimentDB
     return newSentiment;
   }
 
-  async insertMany(sentiments: SentimentData[]): Promise<SentimentData[]> {
+  async insertMany(sentiments: Partial<SentimentData>[]): Promise<SentimentData[]> {
     // check it the sentiments are empty
     if (sentiments.length === 0) {
       throw new Error("Sentiments are empty");

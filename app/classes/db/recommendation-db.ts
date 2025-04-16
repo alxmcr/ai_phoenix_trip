@@ -11,7 +11,18 @@ export class RecommendationDB
     Pagination<RecommendationData>,
     Filters<RecommendationData>
 {
-  async insert(item: RecommendationData): Promise<RecommendationData> {
+  async insert(item: Partial<RecommendationData>): Promise<RecommendationData> {
+
+    // Check if the review_id is not null or undefined
+    if (!item.review_id) {
+      throw new Error("Review ID is required");
+    }
+
+    // Check if the recommendation_text is not null or undefined
+    if (!item.recommendation_text) {
+      throw new Error("Recommendation Text is required");
+    }
+
     const [newRecommendation] = await sql<RecommendationData[]>`
       INSERT INTO recommendation (recommendation_text, review_id)
       VALUES (${item.recommendation_text}, ${item.review_id})
@@ -21,7 +32,7 @@ export class RecommendationDB
   }
 
   async insertMany(
-    recommendations: RecommendationData[]
+    recommendations: Partial<RecommendationData>[]
   ): Promise<RecommendationData[]> {
     // check it the recommendations are empty
     if (recommendations.length === 0) {
