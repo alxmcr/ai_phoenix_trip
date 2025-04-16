@@ -3,6 +3,7 @@ import { OpenAIModels } from "@/app/enums/openai-models";
 
 import { OpenAITemperatures } from "@/app/enums/openai-temperatures";
 import { openai } from "@/app/lib/ai/openai-client";
+import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/lib/ai/openai-system-directives";
 
 export class ReviewAnalyzer {
   private model: OpenAIModels;
@@ -12,7 +13,7 @@ export class ReviewAnalyzer {
   constructor() {
     this.model = OpenAIModels.GPT_4_O;
     this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
-    this.directiveSystem = "";
+    this.directiveSystem = TRAVEL_ASSISTANT_REVIEW_ANALYZER;
   }
 
   // Use the Responses API from OpenAI to analyze the review
@@ -27,7 +28,7 @@ export class ReviewAnalyzer {
       input: [
         {
           role: OpenAIMessageRoles.SYSTEM,
-          content: "You are a helpful assistant that analyzes reviews.",
+          content: this.directiveSystem,
         },
         { role: OpenAIMessageRoles.USER, content: prompt },
       ],
