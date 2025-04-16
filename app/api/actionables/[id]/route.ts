@@ -4,7 +4,7 @@ import { validate as validateUUID } from "uuid";
 import { HTTPResponseCode } from "@/app/enums/http-response-code";
 
 // Helper database
-const actionableDb = new ActionableDB();
+const dbActionable = new ActionableDB();
 
 export async function GET(
   request: NextRequest,
@@ -20,10 +20,10 @@ export async function GET(
     });
   }
 
-  const actionable = await actionableDb.read(id);
+  const rowActionable = await dbActionable.read(id);
 
   // If the actionable is not found, return a 404 error
-  if (!actionable) {
+  if (!rowActionable) {
     return new Response(JSON.stringify({ error: "Actionable not found" }), {
       status: HTTPResponseCode.NOT_FOUND,
       headers: { "Content-Type": "application/json" },
@@ -31,7 +31,7 @@ export async function GET(
   }
 
   // If the actionable is found, return the actionable
-  return new Response(JSON.stringify(actionable), {
+  return new Response(JSON.stringify(rowActionable), {
     status: HTTPResponseCode.OK,
     headers: { "Content-Type": "application/json" },
   });
@@ -51,7 +51,7 @@ export async function DELETE(
     });
   }
 
-  const isDeleted = await actionableDb.delete(id);
+  const isDeleted = await dbActionable.delete(id);
 
   // If the actionable is not found, return a 404 error
   if (!isDeleted) {
@@ -81,7 +81,7 @@ export async function PUT(
 
   const body = await request.json();
 
-  const updatedActionable = await actionableDb.update(id, body);
+  const updatedActionable = await dbActionable.update(id, body);
 
   // If the actionable is not found, return a 404 error
   if (!updatedActionable) {
