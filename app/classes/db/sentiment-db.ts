@@ -20,6 +20,20 @@ export class SentimentDB
     return newSentiment;
   }
 
+  async insertMany(sentiments: SentimentData[]): Promise<SentimentData[]> {
+    // check it the sentiments are empty
+    if (sentiments.length === 0) {
+      throw new Error("Sentiments are empty");
+    }
+
+    // call the insert method for each sentiments
+    const sentimentsCreated = await Promise.all(
+      sentiments.map((sentiment) => this.insert(sentiment))
+    );
+
+    return sentimentsCreated;
+  }
+
   async read(id: string): Promise<SentimentData | null> {
     const [sentiment] = await sql<SentimentData[]>`
       SELECT * FROM sentiment WHERE sentiment_id = ${id}

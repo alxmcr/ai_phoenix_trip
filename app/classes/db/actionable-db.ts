@@ -30,6 +30,20 @@ export class ActionableDB
     }
   }
 
+  async insertMany(actionables: ActionableData[] = []): Promise<ActionableData[]> {
+    // check it the actionables are empty
+    if (actionables.length === 0) {
+      throw new Error("Actionables are empty");
+    }
+
+    // call the insert method for each actionable
+    const actionablesCreated = await Promise.all(
+      actionables.map((actionable) => this.insert(actionable))
+    );
+
+    return actionablesCreated;
+  }
+
   async read(id: string): Promise<ActionableData | null> {
     const [actionable] = await sql<ActionableData[]>`
       SELECT * FROM actionable WHERE actionable_id = ${id}
