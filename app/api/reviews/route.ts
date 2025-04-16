@@ -1,4 +1,5 @@
 import { ReviewDB } from "@/app/classes/db/review-db";
+import { ManagerOpenAI } from "@/app/classes/open-ai/manager-open-ai";
 import { HTTPResponseCode } from "@/app/enums/http-response-code";
 import { validate as validateUUID } from "uuid";
 
@@ -47,8 +48,11 @@ export async function POST(request: Request) {
       });
     }
 
-    // Return the new Review
-    return new Response(JSON.stringify(newReview), {
+    // Analyze the review with OpenAI
+    const reviewAIResponse = await ManagerOpenAI.analyzeReview(newReview);
+
+    // Return response from OpenAI for the review
+    return new Response(JSON.stringify(reviewAIResponse), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
     });

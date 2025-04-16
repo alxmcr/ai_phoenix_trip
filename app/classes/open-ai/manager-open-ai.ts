@@ -7,7 +7,7 @@ import { ValidationReview } from "../models/validation-review";
 
 export class ManagerOpenAI {
   // Analyze the review
-  static async analyzeReview(review: ReviewData) {
+  static async analyzeReview(review: ReviewData): Promise<ReviewAIResponse> {
     // validate the review
     const isValid = ValidationReview.validateReview(review);
 
@@ -15,9 +15,12 @@ export class ManagerOpenAI {
       throw new Error("Review is not valid");
     }
 
-    // Analyze the review with OpenAI
+    // check if the review fields are empty
+    if (ValidationReview.validateReview(review)) {
+      throw new Error("There are fields that are empty");
+    }
 
-    // Add extra information to the review
+    // Analyze the review with OpenAI
 
     // a. Relationship between review and actionable
     // Mock actionable
@@ -73,9 +76,9 @@ export class ManagerOpenAI {
     // Build the response
     const response: ReviewAIResponse = {
       review_id: review.review_id,
-      actionable: actionables,
-      sentiment: sentiments,
-      recommendation: recommendations,
+      actionables: actionables,
+      sentiments: sentiments,
+      recommendations: recommendations,
     };
 
     return response;
