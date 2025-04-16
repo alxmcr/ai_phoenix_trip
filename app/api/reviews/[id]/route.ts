@@ -1,10 +1,16 @@
+import { ActionableDB } from "@/app/classes/db/actionable-db";
+import { RecommendationDB } from "@/app/classes/db/recommendation-db";
 import { ReviewDB } from "@/app/classes/db/review-db";
+import { SentimentDB } from "@/app/classes/db/sentiment-db";
+import { HTTPResponseCode } from "@/app/enums/http-response-code";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
 
-// Helper database
+// Helpers database
 const dbReview = new ReviewDB();
+const dbActionable = new ActionableDB();
+const dbRecommendation = new RecommendationDB();
+const dbSentiment = new SentimentDB();
 
 export async function GET(
   request: NextRequest,
@@ -30,8 +36,39 @@ export async function GET(
     });
   }
 
+  // check that the review id is a valid uuid
+  if (!validateUUID(rowReview.review_id)) {
+    return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
+      status: HTTPResponseCode.BAD_REQUEST,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // Filter actionables by review id
+  const actionables = await dbActionable.filter({
+    review_id: rowReview.review_id,
+  });
+
+  // Filter sentiments by review id
+  const sentiments = await dbSentiment.filter({
+    review_id: rowReview.review_id,
+  });
+
+  // Filter recommendations by review id
+  const recommendations = await dbRecommendation.filter({
+    review_id: rowReview.review_id,
+  });
+
+  // Build the response
+  const response = {
+    review: rowReview,
+    actionables: actionables,
+    sentiments: sentiments,
+    recommendations: recommendations,
+  };
+
   // If the Review is found, return the Review
-  return new Response(JSON.stringify(rowReview), {
+  return new Response(JSON.stringify(response), {
     status: HTTPResponseCode.OK,
     headers: { "Content-Type": "application/json" },
   });
