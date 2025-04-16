@@ -63,7 +63,7 @@ export class ActionableDB
     const offset = (page - 1) * pageSize;
     return await sql<ActionableData[]>`
       SELECT * FROM actionable
-      ORDER BY actionable_id
+      ORDER BY created_at desc
       LIMIT ${pageSize}
       OFFSET ${offset}
     `;
