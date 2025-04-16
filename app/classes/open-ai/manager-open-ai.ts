@@ -73,9 +73,9 @@ export class ManagerOpenAI {
     // Build the response
     const response: ReviewAIResponse = {
       review_id: review.review_id,
-      actionable: actionables,
-      sentiment: sentiments,
-      recommendation: recommendations,
+      actionables: actionables,
+      sentiments: sentiments,
+      recommendations: recommendations,
     };
 
     return response;
