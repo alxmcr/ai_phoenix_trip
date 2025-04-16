@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   try {
     //Insert new Recommendation into your DB
-    const newRecommendation = await dbRecommendation.create(body);
+    const newRecommendation = await dbRecommendation.insert(body);
 
     // check if newAction is not null or undefined
     if (!newRecommendation) {

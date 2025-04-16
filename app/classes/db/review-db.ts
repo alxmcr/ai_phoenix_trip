@@ -1,5 +1,5 @@
 import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
-import { CRUD } from "@/app/generics/crud";
+import { DBOperations } from "@/app/generics/db-operations";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
@@ -7,16 +7,31 @@ import { ReviewData } from "@/app/types/db/review";
 
 export class ReviewDB
   implements
-  CRUD<ReviewData>,
-  Pagination<ReviewData>,
-  Filters<ReviewData> {
-  async create(item: ReviewData): Promise<ReviewData> {
+    DBOperations<ReviewData>,
+    Pagination<ReviewData>,
+    Filters<ReviewData>
+{
+  async insert(item: ReviewData): Promise<ReviewData> {
     const [newReview] = await sql<ReviewData[]>`
       INSERT INTO review (trip_date, transport_mode, company_name, origin, destination, email, rating, review_text)
       VALUES (${item.trip_date}, ${item.transport_mode}, ${item.company_name}, ${item.origin}, ${item.destination}, ${item.email}, ${item.rating}, ${item.review_text})
       RETURNING *
     `;
     return newReview;
+  }
+
+  async insertMany(reviews: ReviewData[]): Promise<ReviewData[]> {
+    // check it the reviews are empty
+    if (reviews.length === 0) {
+      throw new Error("Reviews are empty");
+    }
+
+    // call the insert method for each reviews
+    const reviewsCreated = await Promise.all(
+      reviews.map((review) => this.insert(review))
+    );
+
+    return reviewsCreated;
   }
 
   async read(id: string): Promise<ReviewData | null> {
@@ -26,7 +41,10 @@ export class ReviewDB
     return review || null;
   }
 
-  async update(id: string, item: Partial<ReviewData>): Promise<ReviewData | null> {
+  async update(
+    id: string,
+    item: Partial<ReviewData>
+  ): Promise<ReviewData | null> {
     const [updatedReview] = await sql<ReviewData[]>`
       UPDATE review
       SET ${sql(item)}
@@ -56,14 +74,26 @@ export class ReviewDB
 
   async filter(filters: Partial<ReviewData>): Promise<ReviewData[]> {
     // Validate that only valid ReviewData fields are present
-    const validFields = ['review_id', 'trip_date', 'transport_mode', 'company_name', 'origin', 'destination', 'email', 'rating', 'review_text'];
+    const validFields = [
+      "review_id",
+      "trip_date",
+      "transport_mode",
+      "company_name",
+      "origin",
+      "destination",
+      "email",
+      "rating",
+      "review_text",
+    ];
     const invalidFields = Object.keys(filters).filter(
-      field => !validFields.includes(field)
+      (field) => !validFields.includes(field)
     );
 
     if (invalidFields.length > 0) {
       throw new InvalidFilterError(
-        `Invalid filter fields: ${invalidFields.join(', ')}. Valid fields are: ${validFields.join(', ')}`
+        `Invalid filter fields: ${invalidFields.join(
+          ", "
+        )}. Valid fields are: ${validFields.join(", ")}`
       );
     }
 
@@ -113,9 +143,12 @@ export class ReviewDB
       conditions.push(sql`updated_at = ${filters.updated_at}`);
     }
 
-    const whereClause = conditions.length > 0
-      ? sql`WHERE ${conditions.reduce((acc, condition) => sql`${acc} AND ${condition}`)}`
-      : sql``;
+    const whereClause =
+      conditions.length > 0
+        ? sql`WHERE ${conditions.reduce(
+            (acc, condition) => sql`${acc} AND ${condition}`
+          )}`
+        : sql``;
 
     const review = await sql<ReviewData[]>`
       SELECT *

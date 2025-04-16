@@ -1,5 +1,5 @@
 import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
-import { CRUD } from "@/app/generics/crud";
+import { DBOperations } from "@/app/generics/db-operations";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
@@ -8,11 +8,11 @@ import { ReviewData } from "@/app/types/db/review";
 
 export class ActionableDB
   implements
-    CRUD<ActionableData>,
+    DBOperations<ActionableData>,
     Pagination<ActionableData>,
     Filters<ActionableData>
 {
-  async create(item: ActionableData): Promise<ActionableData> {
+  async insert(item: ActionableData): Promise<ActionableData> {
     // Check if the review_id exists
     const [review] = await sql<ReviewData[]>`
       SELECT * FROM review WHERE review_id = ${item.review_id}
@@ -28,6 +28,20 @@ export class ActionableDB
       `;
       return newActionable;
     }
+  }
+
+  async insertMany(actionables: ActionableData[] = []): Promise<ActionableData[]> {
+    // check it the actionables are empty
+    if (actionables.length === 0) {
+      throw new Error("Actionables are empty");
+    }
+
+    // call the insert method for each actionable
+    const actionablesCreated = await Promise.all(
+      actionables.map((actionable) => this.insert(actionable))
+    );
+
+    return actionablesCreated;
   }
 
   async read(id: string): Promise<ActionableData | null> {

@@ -1,5 +1,5 @@
 import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
-import { CRUD } from "@/app/generics/crud";
+import { DBOperations } from "@/app/generics/db-operations";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
@@ -7,17 +7,31 @@ import { SentimentData } from "@/app/types/db/sentiment";
 
 export class SentimentDB
   implements
-    CRUD<SentimentData>,
+    DBOperations<SentimentData>,
     Pagination<SentimentData>,
     Filters<SentimentData>
 {
-  async create(item: SentimentData): Promise<SentimentData> {
+  async insert(item: SentimentData): Promise<SentimentData> {
     const [newSentiment] = await sql<SentimentData[]>`
       INSERT INTO sentiment (sentiment_text, review_id)
       VALUES (${item.sentiment_text}, ${item.review_id})
       RETURNING *
     `;
     return newSentiment;
+  }
+
+  async insertMany(sentiments: SentimentData[]): Promise<SentimentData[]> {
+    // check it the sentiments are empty
+    if (sentiments.length === 0) {
+      throw new Error("Sentiments are empty");
+    }
+
+    // call the insert method for each sentiments
+    const sentimentsCreated = await Promise.all(
+      sentiments.map((sentiment) => this.insert(sentiment))
+    );
+
+    return sentimentsCreated;
   }
 
   async read(id: string): Promise<SentimentData | null> {

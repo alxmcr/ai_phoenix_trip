@@ -1,5 +1,5 @@
 import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
-import { CRUD } from "@/app/generics/crud";
+import { DBOperations } from "@/app/generics/db-operations";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
@@ -7,16 +7,33 @@ import { RecommendationData } from "@/app/types/db/recommendation";
 
 export class RecommendationDB
   implements
-  CRUD<RecommendationData>,
-  Pagination<RecommendationData>,
-  Filters<RecommendationData> {
-  async create(item: RecommendationData): Promise<RecommendationData> {
+    DBOperations<RecommendationData>,
+    Pagination<RecommendationData>,
+    Filters<RecommendationData>
+{
+  async insert(item: RecommendationData): Promise<RecommendationData> {
     const [newRecommendation] = await sql<RecommendationData[]>`
       INSERT INTO recommendation (recommendation_text, review_id)
       VALUES (${item.recommendation_text}, ${item.review_id})
       RETURNING *
     `;
     return newRecommendation;
+  }
+
+  async insertMany(
+    recommendations: RecommendationData[]
+  ): Promise<RecommendationData[]> {
+    // check it the recommendations are empty
+    if (recommendations.length === 0) {
+      throw new Error("Recommendations are empty");
+    }
+
+    // call the insert method for each recommendations
+    const recommendationsCreated = await Promise.all(
+      recommendations.map((recommendation) => this.insert(recommendation))
+    );
+
+    return recommendationsCreated;
   }
 
   async read(id: string): Promise<RecommendationData | null> {
@@ -26,7 +43,10 @@ export class RecommendationDB
     return recommendation || null;
   }
 
-  async update(id: string, item: Partial<RecommendationData>): Promise<RecommendationData | null> {
+  async update(
+    id: string,
+    item: Partial<RecommendationData>
+  ): Promise<RecommendationData | null> {
     const [updatedRecommendation] = await sql<RecommendationData[]>`
     UPDATE recommendation
     SET ${sql(item)}
@@ -43,7 +63,10 @@ export class RecommendationDB
     return result.count > 0;
   }
 
-  async paginate(page: number, pageSize: number): Promise<RecommendationData[]> {
+  async paginate(
+    page: number,
+    pageSize: number
+  ): Promise<RecommendationData[]> {
     const offset = (page - 1) * pageSize;
     return await sql<RecommendationData[]>`
       SELECT * FROM recommendation
@@ -53,32 +76,45 @@ export class RecommendationDB
     `;
   }
 
-  async filter(filters: Partial<RecommendationData>): Promise<RecommendationData[]> {
+  async filter(
+    filters: Partial<RecommendationData>
+  ): Promise<RecommendationData[]> {
     // Validate that only valid RecommendationData fields are present
-    const validFields = ['recommendation_id', 'recommendation_text', 'review_id'];
+    const validFields = [
+      "recommendation_id",
+      "recommendation_text",
+      "review_id",
+    ];
     const invalidFields = Object.keys(filters).filter(
-      field => !validFields.includes(field)
+      (field) => !validFields.includes(field)
     );
 
     if (invalidFields.length > 0) {
       throw new InvalidFilterError(
-        `Invalid filter fields: ${invalidFields.join(', ')}. Valid fields are: ${validFields.join(', ')}`
+        `Invalid filter fields: ${invalidFields.join(
+          ", "
+        )}. Valid fields are: ${validFields.join(", ")}`
       );
     }
 
     const conditions = [];
 
     if (filters.recommendation_text) {
-      conditions.push(sql`recommendation_text = ${filters.recommendation_text}`);
+      conditions.push(
+        sql`recommendation_text = ${filters.recommendation_text}`
+      );
     }
 
     if (filters.review_id) {
       conditions.push(sql`review_id = ${filters.review_id}`);
     }
 
-    const whereClause = conditions.length > 0
-      ? sql`WHERE ${conditions.reduce((acc, condition) => sql`${acc} AND ${condition}`)}`
-      : sql``;
+    const whereClause =
+      conditions.length > 0
+        ? sql`WHERE ${conditions.reduce(
+            (acc, condition) => sql`${acc} AND ${condition}`
+          )}`
+        : sql``;
 
     const recommendation = await sql<RecommendationData[]>`
          SELECT *
