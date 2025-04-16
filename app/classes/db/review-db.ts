@@ -47,7 +47,7 @@ export class ReviewDB
     const offset = (page - 1) * pageSize;
     const review = await sql<ReviewData[]>`
       SELECT * FROM review
-      ORDER BY review_id DESC
+      ORDER BY created_at desc
       LIMIT ${pageSize}
       OFFSET ${offset}
     `;

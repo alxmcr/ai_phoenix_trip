@@ -51,7 +51,7 @@ export class SentimentDB
     const offset = (page - 1) * pageSize;
     const sentiment = await sql<SentimentData[]>`
       SELECT * FROM sentiment
-      ORDER BY sentiment_id DESC
+      ORDER BY created_at desc
       LIMIT ${pageSize}
       OFFSET ${offset}
     `;

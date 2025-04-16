@@ -47,7 +47,7 @@ export class RecommendationDB
     const offset = (page - 1) * pageSize;
     return await sql<RecommendationData[]>`
       SELECT * FROM recommendation
-      ORDER BY recommendation_id
+      ORDER BY created_at desc
       LIMIT ${pageSize}
       OFFSET ${offset}
     `;
