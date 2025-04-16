@@ -7,7 +7,7 @@ import { ValidationReview } from "../models/validation-review";
 
 export class ManagerOpenAI {
   // Analyze the review
-  static async analyzeReview(review: ReviewData) {
+  static async analyzeReview(review: ReviewData): Promise<ReviewAIResponse> {
     // validate the review
     const isValid = ValidationReview.validateReview(review);
 
