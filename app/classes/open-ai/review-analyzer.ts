@@ -1,24 +1,35 @@
+import { OpenAIMessageRoles } from "@/app/enums/openai-message-roles";
 import { OpenAIModels } from "@/app/enums/openai-models";
-import { OpenAIRoles } from "@/app/enums/openai-roles";
+
 import { OpenAITemperatures } from "@/app/enums/openai-temperatures";
 import { openai } from "@/app/lib/ai/openai-client";
 
 export class ReviewAnalyzer {
+  private model: OpenAIModels;
+  private temperature: OpenAITemperatures;
+  private directiveSystem: string;
+
+  constructor() {
+    this.model = OpenAIModels.GPT_4_O;
+    this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
+    this.directiveSystem = "";
+  }
+
   // Use the Responses API from OpenAI to analyze the review
   // Source: https://platform.openai.com/docs/guides/responses
   // Roles: system, user
-  static async analyzeReview(review: string) {
+  async analyzeReview(review: string) {
     const prompt = "";
 
     const response = await openai.responses.create({
-      temperature: OpenAITemperatures.BALANCED_CREATIVE,
-      model: OpenAIModels.GPT_4_O,
+      temperature: this.temperature,
+      model: this.model,
       input: [
         {
-          role: OpenAIRoles.SYSTEM,
+          role: OpenAIMessageRoles.SYSTEM,
           content: "You are a helpful assistant that analyzes reviews.",
         },
-        { role: OpenAIRoles.USER, content: prompt },
+        { role: OpenAIMessageRoles.USER, content: prompt },
       ],
     });
   }

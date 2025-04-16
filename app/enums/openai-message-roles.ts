@@ -1,5 +1,5 @@
-// Enum for OpenAI roles
-export enum OpenAIRoles {
+// Enum for OpenAI message roles
+export enum OpenAIMessageRoles {
   SYSTEM = "system",
   USER = "user",
   ASSISTANT = "assistant",
