@@ -22,44 +22,50 @@ export class ValidationReview {
       throw new Error("Review not found");
     }
 
+    const emptyFields: string[] = [];
+
     // Check if the trip date is valid
     if (!review.trip_date) {
-      throw new Error("Trip date is not valid");
+      emptyFields.push("trip_date");
     }
 
     // Check if the transport mode is valid
     if (!review.transport_mode) {
-      throw new Error("Transport mode is not valid");
+      emptyFields.push("transport_mode");
     }
 
     // Check if the company name is valid
     if (!review.company_name) {
-      throw new Error("Company name is not valid");
+      emptyFields.push("company_name");
     }
 
     // Check if the origin is valid
     if (!review.origin) {
-      throw new Error("Origin is not valid");
+      emptyFields.push("origin");
     }
 
     // Check if the destination is valid
     if (!review.destination) {
-      throw new Error("Destination is not valid");
+      emptyFields.push("destination");
     }
 
     // Check if the email is valid
     if (!review.email) {
-      throw new Error("Email is not valid");
+      emptyFields.push("email");
     }
 
     // Check if the rating is valid
     if (!review.rating) {
-      throw new Error("Rating is not valid");
+      emptyFields.push("rating");
     }
 
     // Check if the review text is valid
     if (!review.review_text) {
-      throw new Error("Review text is not valid");
+      emptyFields.push("review_text");
+    }
+
+    if (emptyFields.length > 0) {
+      throw new Error(`The following fields are empty: ${emptyFields.join(", ")}`);
     }
 
     return true;

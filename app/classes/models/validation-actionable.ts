@@ -8,19 +8,25 @@ export class ValidationActionable {
       throw new Error("Actionable not found");
     }
 
+    const emptyFields: string[] = [];
+
     // Check if the actionable is valid
     if (!validateUUID(actionable.actionable_id)) {
-      throw new Error("Actionable ID is not valid");
+      emptyFields.push("actionable_id");
     }
 
     // Check if the review id is valid
     if (!validateUUID(actionable.review_id)) {
-      throw new Error("Review ID is not valid");
+      emptyFields.push("review_id");
     }
 
     // Check if the actionable text is valid
     if (!actionable.action_text) {
-      throw new Error("Actionable text is not valid");
+      emptyFields.push("action_text");
+    }
+
+    if (emptyFields.length > 0) {
+      throw new Error(`The following fields are empty: ${emptyFields.join(", ")}`);
     }
 
     return true;
