@@ -4,6 +4,7 @@ import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
 import { ActionableData } from "@/app/types/db/actionable";
+import { ReviewData } from "@/app/types/db/review";
 
 export class ActionableDB
   implements
@@ -12,12 +13,22 @@ export class ActionableDB
     Filters<ActionableData>
 {
   async create(item: ActionableData): Promise<ActionableData> {
-    const [newActionable] = await sql<ActionableData[]>`
-      INSERT INTO actionable (action_text, review_id)
-      VALUES (${item.action_text}, ${item.review_id})
-      RETURNING *
+    // Check if the review_id exists
+    const [review] = await sql<ReviewData[]>`
+      SELECT * FROM review WHERE review_id = ${item.review_id}
     `;
-    return newActionable;
+    console.log("🚀 ~ create ~ review:", review);
+
+    if (!review) {
+      throw new Error("Review not found");
+    } else {
+      const [newActionable] = await sql<ActionableData[]>`
+        INSERT INTO actionable (action_text, review_id)
+        VALUES (${item.action_text}, ${item.review_id})
+        RETURNING *
+      `;
+      return newActionable;
+    }
   }
 
   async read(id: string): Promise<ActionableData | null> {
@@ -52,7 +63,7 @@ export class ActionableDB
     const offset = (page - 1) * pageSize;
     return await sql<ActionableData[]>`
       SELECT * FROM actionable
-      ORDER BY actionable_id
+      ORDER BY created_at desc
       LIMIT ${pageSize}
       OFFSET ${offset}
     `;
