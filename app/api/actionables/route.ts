@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   try {
     //Insert new actionable into your DB
-    const newActionable = dbActionable.create(body);
+    const newActionable = await dbActionable.create(body);
 
     // check if newAction is not null or undefined
     if (!newActionable) {
@@ -39,6 +39,7 @@ export async function POST(request: Request) {
     }
 
     // Return the new actionable
+    console.log("🚀 ~ returnnewResponse ~ newActionable:", newActionable)
     return new Response(JSON.stringify(newActionable), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
