@@ -1,9 +1,13 @@
-// Enum for OpenAI models
-export enum OpenAIModels {
-  GPT_3_5_TURBO = "gpt-3.5-turbo",
-  GPT_4 = "gpt-4",
-  GPT_4_TURBO = "gpt-4-turbo",
-  GPT_4_O = "gpt-4o",
-  GPT_4_O_MINI = "gpt-4o-mini",
+// OpenAI Models
+// Sources:
+// - https://platform.openai.com/docs/models
+// - https://model-spec.openai.com/2025-02-12.html#model_reference
 
+// Enum for OpenAI models:
+// Cost-optimized models
+// Smaller, faster models that cost less to run.
+export enum OpenAIModelsCostOptimized {
+  GPT_4_O_MINI = "gpt-4o-mini",
+  GPT_3_5_TURBO = "gpt-3.5-turbo",
+  GPT_4_1_NANO = "gpt-4.1-nano-2025-04-14",
 }

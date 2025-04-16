@@ -1,17 +1,16 @@
 import { OpenAIMessageRoles } from "@/app/enums/openai-message-roles";
-import { OpenAIModels } from "@/app/enums/openai-models";
-
+import { OpenAIModelsCostOptimized } from "@/app/enums/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai-temperatures";
 import { openai } from "@/app/lib/ai/openai-client";
 import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/lib/ai/openai-system-directives";
 
 export class ReviewAnalyzer {
-  private model: OpenAIModels;
+  private model: OpenAIModelsCostOptimized;
   private temperature: OpenAITemperatures;
   private directiveSystem: string;
 
   constructor() {
-    this.model = OpenAIModels.GPT_4_O;
+    this.model = OpenAIModelsCostOptimized.GPT_4_O_MINI;
     this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
     this.directiveSystem = TRAVEL_ASSISTANT_REVIEW_ANALYZER;
   }
