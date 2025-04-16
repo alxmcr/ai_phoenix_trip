@@ -1,9 +1,9 @@
-import { CRUD } from "../../generics/crud";
-import { Filters } from "../../generics/filters";
-import { Pagination } from "../../generics/pagination";
-import sql from "../../lib/db/database-client";
-import { InvalidFilterError } from "../../middleware/error-handler";
-import { RecommendationData } from "../../types/db/recommendation";
+import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
+import { CRUD } from "@/app/generics/crud";
+import { Filters } from "@/app/generics/filters";
+import { Pagination } from "@/app/generics/pagination";
+import sql from "@/app/lib/db/database-client";
+import { RecommendationData } from "@/app/types/db/recommendation";
 
 export class RecommendationDB
   implements

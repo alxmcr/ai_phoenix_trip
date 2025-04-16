@@ -1,9 +1,9 @@
-import { CRUD } from "../../generics/crud";
-import { Filters } from "../../generics/filters";
-import { Pagination } from "../../generics/pagination";
-import sql from "../../lib/db/database-client";
-import { InvalidFilterError } from "../../middleware/error-handler";
-import { ReviewData } from "../../types/db/review";
+import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
+import { CRUD } from "@/app/generics/crud";
+import { Filters } from "@/app/generics/filters";
+import { Pagination } from "@/app/generics/pagination";
+import sql from "@/app/lib/db/database-client";
+import { ReviewData } from "@/app/types/db/review";
 
 export class ReviewDB
   implements

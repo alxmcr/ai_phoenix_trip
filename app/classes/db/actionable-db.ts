@@ -1,9 +1,9 @@
+import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
 import { CRUD } from "@/app/generics/crud";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
 import { ActionableData } from "@/app/types/db/actionable";
-import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
 
 export class ActionableDB
   implements

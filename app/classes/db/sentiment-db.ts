@@ -1,15 +1,16 @@
-import { CRUD } from "../../generics/crud";
-import { Filters } from "../../generics/filters";
-import { Pagination } from "../../generics/pagination";
-import sql from "../../lib/db/database-client";
-import { SentimentData } from "../../types/db/sentiment";
-import { InvalidFilterError } from "../../middleware/error-handler";
+import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
+import { CRUD } from "@/app/generics/crud";
+import { Filters } from "@/app/generics/filters";
+import { Pagination } from "@/app/generics/pagination";
+import sql from "@/app/lib/db/database-client";
+import { SentimentData } from "@/app/types/db/sentiment";
 
 export class SentimentDB
   implements
-  CRUD<SentimentData>,
-  Pagination<SentimentData>,
-  Filters<SentimentData> {
+    CRUD<SentimentData>,
+    Pagination<SentimentData>,
+    Filters<SentimentData>
+{
   async create(item: SentimentData): Promise<SentimentData> {
     const [newSentiment] = await sql<SentimentData[]>`
       INSERT INTO sentiment (sentiment_text, review_id)
@@ -26,7 +27,10 @@ export class SentimentDB
     return sentiment || null;
   }
 
-  async update(id: string, item: Partial<SentimentData>): Promise<SentimentData | null> {
+  async update(
+    id: string,
+    item: Partial<SentimentData>
+  ): Promise<SentimentData | null> {
     const [updatedSentiment] = await sql<SentimentData[]>`
       UPDATE sentiment
       SET ${sql(item)}
@@ -56,14 +60,16 @@ export class SentimentDB
 
   async filter(filters: Partial<SentimentData>): Promise<SentimentData[]> {
     // Validate that only valid SentimentData fields are present
-    const validFields = ['sentiment_id', 'sentiment_text', 'review_id'];
+    const validFields = ["sentiment_id", "sentiment_text", "review_id"];
     const invalidFields = Object.keys(filters).filter(
-      field => !validFields.includes(field)
+      (field) => !validFields.includes(field)
     );
 
     if (invalidFields.length > 0) {
       throw new InvalidFilterError(
-        `Invalid filter fields: ${invalidFields.join(', ')}. Valid fields are: ${validFields.join(', ')}`
+        `Invalid filter fields: ${invalidFields.join(
+          ", "
+        )}. Valid fields are: ${validFields.join(", ")}`
       );
     }
 
@@ -77,9 +83,12 @@ export class SentimentDB
       conditions.push(sql`review_id = ${filters.review_id}`);
     }
 
-    const whereClause = conditions.length > 0
-      ? sql`WHERE ${conditions.reduce((acc, condition) => sql`${acc} AND ${condition}`)}`
-      : sql``;
+    const whereClause =
+      conditions.length > 0
+        ? sql`WHERE ${conditions.reduce(
+            (acc, condition) => sql`${acc} AND ${condition}`
+          )}`
+        : sql``;
 
     const sentiment = await sql<SentimentData[]>`
       SELECT *
