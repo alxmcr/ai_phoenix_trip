@@ -1,5 +1,5 @@
 import "@/envConfig.ts";
-import sql from "@/app/lib/db/database-client";
+import sql from "@/app/config/db/database-client";
 const env = process.env.NODE_ENV || "development";
 
 export async function GET() {
