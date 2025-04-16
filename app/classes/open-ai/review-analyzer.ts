@@ -1,8 +1,8 @@
 import { OpenAIMessageRoles } from "@/app/enums/openai-message-roles";
 import { OpenAIModelsCostOptimized } from "@/app/enums/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai-temperatures";
-import { openai } from "@/app/lib/ai/openai-client";
-import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/lib/ai/openai-system-directives";
+import { openai } from "@/app/config/ai/openai-client";
+import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/config/ai/openai-system-directives";
 
 export class ReviewAnalyzer {
   private model: OpenAIModelsCostOptimized;

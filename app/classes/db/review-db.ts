@@ -2,7 +2,7 @@ import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
 import { DBOperations } from "@/app/generics/db-operations";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
-import sql from "@/app/lib/db/database-client";
+import sql from "@/app/config/db/database-client";
 import { ReviewData } from "@/app/types/db/review";
 
 export class ReviewDB
