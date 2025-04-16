@@ -9,14 +9,14 @@ export class ManagerOpenAI {
   // Analyze the review
   static async analyzeReview(review: ReviewData): Promise<ReviewAIResponse> {
     // validate the review
-    const isValid = ValidationReview.validateReview(review);
+    const isValid = ValidationReview.validateInsertReview(review);
 
     if (!isValid) {
       throw new Error("Review is not valid");
     }
 
     // check if the review fields are empty
-    if (ValidationReview.validateReview(review)) {
+    if (ValidationReview.validateInsertReview(review)) {
       throw new Error("There are fields that are empty");
     }
 

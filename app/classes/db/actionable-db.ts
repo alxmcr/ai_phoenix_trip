@@ -12,7 +12,17 @@ export class ActionableDB
     Pagination<ActionableData>,
     Filters<ActionableData>
 {
-  async insert(item: ActionableData): Promise<ActionableData> {
+  async insert(item: Partial<ActionableData>): Promise<ActionableData> {
+    // Check if the review_id is not null or undefined
+    if (!item.review_id) {
+      throw new Error("Review ID is required");
+    }
+
+    // Check if the action_text is not null or undefined
+    if (!item.action_text) {
+      throw new Error("Action Text is required");
+    }
+
     // Check if the review_id exists
     const [review] = await sql<ReviewData[]>`
       SELECT * FROM review WHERE review_id = ${item.review_id}
@@ -30,7 +40,9 @@ export class ActionableDB
     }
   }
 
-  async insertMany(actionables: ActionableData[] = []): Promise<ActionableData[]> {
+  async insertMany(
+    actionables: Partial<ActionableData>[] = []
+  ): Promise<ActionableData[]> {
     // check it the actionables are empty
     if (actionables.length === 0) {
       throw new Error("Actionables are empty");

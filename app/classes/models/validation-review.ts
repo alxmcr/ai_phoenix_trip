@@ -2,7 +2,7 @@ import { ReviewData } from "@/app/types/db/review";
 import { validate as validateUUID } from "uuid";
 
 export class ValidationReview {
-  // Check all the fields are filled on Review
+  // Check if the review is valid
   static validateReview(review: ReviewData) {
     if (!review) {
       throw new Error("Review not found");
@@ -11,6 +11,15 @@ export class ValidationReview {
     // Check if the review is valid
     if (!validateUUID(review.review_id)) {
       throw new Error("Review ID is not valid");
+    }
+
+    return true;
+  }
+
+  // Check if the review is valid to be inserted
+  static validateInsertReview(review: Partial<ReviewData>) {
+    if (!review) {
+      throw new Error("Review not found");
     }
 
     // Check if the trip date is valid
