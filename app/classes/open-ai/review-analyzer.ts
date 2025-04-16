@@ -11,6 +11,7 @@ export class ReviewAnalyzer {
     const prompt = "";
 
     const response = await openai.responses.create({
+      temperature: OpenAITemperatures.BALANCED_CREATIVE,
       model: OpenAIModels.GPT_4_O,
       input: [
         {
@@ -19,7 +20,6 @@ export class ReviewAnalyzer {
         },
         { role: OpenAIRoles.USER, content: prompt },
       ],
-      temperature: OpenAITemperatures.BALANCED_CREATIVE,
     });
   }
 }
