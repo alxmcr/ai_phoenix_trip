@@ -10,7 +10,7 @@ export class ReviewAnalyzer {
   private directiveSystem: string;
 
   constructor() {
-    this.model = OpenAIModelsCostOptimized.GPT_4_O_MINI;
+    this.model = OpenAIModelsCostOptimized.GPT_3_5_TURBO;
     this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
     this.directiveSystem = TRAVEL_ASSISTANT_REVIEW_ANALYZER;
   }
