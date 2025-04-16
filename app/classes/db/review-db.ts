@@ -1,5 +1,5 @@
 import { InvalidFilterError } from "@/app/classes/errors/error-invalid-filter";
-import { CRUD } from "@/app/generics/crud";
+import { DBOperations } from "@/app/generics/db-operations";
 import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
@@ -7,7 +7,7 @@ import { ReviewData } from "@/app/types/db/review";
 
 export class ReviewDB
   implements
-  CRUD<ReviewData>,
+  DBOperations<ReviewData>,
   Pagination<ReviewData>,
   Filters<ReviewData> {
   async create(item: ReviewData): Promise<ReviewData> {
