@@ -8,8 +8,8 @@ const dbActionable = new ActionableDB();
 export async function GET(request: Request) {
   // get the page and limit from the request
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get("page") || "1";
-  const limit = searchParams.get("limit") || "10";
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
 
   const actionables = await dbActionable.paginate(page, limit);
 
