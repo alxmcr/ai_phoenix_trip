@@ -11,3 +11,10 @@ export enum OpenAIModelsCostOptimized {
   GPT_3_5_TURBO = "gpt-3.5-turbo",
   GPT_4_1_NANO = "gpt-4.1-nano-2025-04-14",
 }
+
+// Enum for OpenAI models:
+// Older, but greater quality models
+// Smaller, faster models that cost less to run.
+export enum OpenAIModelsOlder {
+  GPT_4_O = "gpt-4o",
+}
