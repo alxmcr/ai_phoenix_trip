@@ -4,7 +4,7 @@
 // - https://model-spec.openai.com/2025-02-12.html#model_reference
 
 // Enum for OpenAI models:
-// Cost-optimized models
+// Cost-optimized models, and structured outputs supported
 // Smaller, faster models that cost less to run.
 export enum OpenAIModelsCostOptimized {
   GPT_4_O_MINI = "gpt-4o-mini",
