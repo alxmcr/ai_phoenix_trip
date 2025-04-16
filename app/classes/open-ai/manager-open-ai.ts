@@ -17,42 +17,75 @@ export class ManagerOpenAI {
   // Build the prompt for the review
   static buildPrompt(review: ReviewData): string {
     return `
-      Analyze the following travel review and provide insights:
+        Analyze the following travel review and provide insights:
 
-      Trip Date: ${review.trip_date}
-      Transport Mode: ${review.transport_mode}
-      Company: ${review.company_name}
-      Route: From ${review.origin} to ${review.destination}
-      Rating: ${review.rating}/5
-      Review: "${review.review_text}"
+        Trip Date: ${review.trip_date}
+        Transport Mode: ${review.transport_mode}
+        Company: ${review.company_name}
+        Route: From ${review.origin} to ${review.destination}
+        Rating: ${review.rating}/5
+        Review: "${review.review_text}"
 
-      Please provide the following analysis in JSON format:
-      1. Sentiment analysis (score from -1 to 1, label as "positive", "neutral", or "negative", and a brief summary)
-      2. 2-3 actionable insights for the company (title, description, and priority as "low", "medium", or "high")
-      3. 2-3 recommendations for improvement (title, description, and potential impact as "low", "medium", or "high")
+        Please analyze this review and return insights in **strict JSON format** with the following structure:
 
-      Return ONLY valid JSON with this structure:
-      {
-        "sentiment": {
-          "score": number,
-          "label": string,
-          "summary": string
-        },
-        "actionables": [
-          {
-            "title": string,
-            "description": string,
-            "priority": string
-          }
-        ],
-        "recommendations": [
-          {
-            "title": string,
-            "description": string,
-            "impact": string
-          }
-        ]
-      }
+        1. **Sentiment analysis** — including:
+          - score (float, from -1 to 1)
+          - label ("positive", "neutral", or "negative")
+          - summary (brief 1–2 sentence overview of sentiment)
+          - emotion_tone (e.g. "frustration", "satisfaction", "disappointment", "joy")
+          - aspect_sentiments (object showing sentiment score per aspect, e.g. { "punctuality": -0.9, "staff": -0.6 })
+          - keywords (array of 2–5 key terms from the review)
+
+        2. **Actionable insights** (2–3 items) — each with:
+          - title
+          - description
+          - priority ("low", "medium", or "high")
+          - department (e.g. "Customer Service", "Operations", "Cleaning", etc.)
+          - category (e.g. "Service", "Communication", "Cleanliness", etc.)
+          - source_aspect (the part of the review that triggered this insight)
+
+        3. **Recommendations for improvement** (2–3 items) — each with:
+          - title
+          - description
+          - impact ("low", "medium", or "high")
+          - target_area (e.g. "Passenger Experience", "Onboard Cleanliness", etc.)
+          - effort_level ("low", "medium", or "high")
+          - data_driven (boolean indicating if it's based on clear review data)
+
+        Return ONLY valid, minified JSON with the following structure:
+        {
+          "sentiment": {
+            "score": number,
+            "label": string,
+            "summary": string,
+            "emotion_tone": string,
+            "aspect_sentiments": {
+              "aspect": number
+            },
+            "keywords": [string]
+          },
+          "actionables": [
+            {
+              "title": string,
+              "description": string,
+              "priority": string,
+              "department": string,
+              "category": string,
+              "source_aspect": string
+            }
+          ],
+          "recommendations": [
+            {
+              "title": string,
+              "description": string,
+              "impact": string,
+              "target_area": string,
+              "effort_level": string,
+              "data_driven": boolean
+            }
+          ]
+        }
+
     `;
   }
 
