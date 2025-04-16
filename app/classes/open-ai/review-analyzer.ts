@@ -16,7 +16,7 @@ export class ReviewAnalyzer {
   }
 
   // Use the Responses API from OpenAI to analyze the review
-  // Source: https://platform.openai.com/docs/guides/responses
+  // Source: https://platform.openai.com/docs/api-reference/responses/create
   // Roles: system, user
   async analyzeReview(review: string) {
     const prompt = "";
