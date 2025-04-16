@@ -4,7 +4,6 @@ import { Filters } from "@/app/generics/filters";
 import { Pagination } from "@/app/generics/pagination";
 import sql from "@/app/lib/db/database-client";
 import { ReviewData } from "@/app/types/db/review";
-import { ValidationReview } from "../models/validation-review";
 
 export class ReviewDB
   implements
