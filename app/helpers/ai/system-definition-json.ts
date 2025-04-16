@@ -41,4 +41,9 @@ export const DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON = `
       }
     ]
   }
+
+  Notes:
+
+    - Actionables: 4 - 6 items.
+    - Recommendations: 2 - 3 items.
 `;

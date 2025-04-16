@@ -15,7 +15,7 @@ export const DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER = `
         - aspect_sentiments (object showing sentiment score per aspect, e.g. { "punctuality": -0.9, "staff": -0.6 })
         - keywords (array of 2–5 key terms from the review)
 
-      2. **Actionable insights** (2–3 items) — each with:
+      2. **Actionable insights** (4–6 items) — each with:
         - title
         - description
         - priority ("low", "medium", or "high")
