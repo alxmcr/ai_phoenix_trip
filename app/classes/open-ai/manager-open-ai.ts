@@ -15,9 +15,12 @@ export class ManagerOpenAI {
       throw new Error("Review is not valid");
     }
 
-    // Analyze the review with OpenAI
+    // check if the review fields are empty
+    if (ValidationReview.validateReview(review)) {
+      throw new Error("There are fields that are empty");
+    }
 
-    // Add extra information to the review
+    // Analyze the review with OpenAI
 
     // a. Relationship between review and actionable
     // Mock actionable
