@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     // Analyze the review with OpenAI
     const reviewAIResponse = await ManagerOpenAI.analyzeReview(newReview);
 
-    // Return the new Review
+    // Return response from OpenAI for the review
     return new Response(JSON.stringify(reviewAIResponse), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
