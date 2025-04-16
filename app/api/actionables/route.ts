@@ -5,6 +5,15 @@ import { HTTPResponseCode } from "@/app/enums/http-response-code";
 
 const dbActionable = new ActionableDB();
 
+export async function GET(request: Request) {
+  const actionables = await dbActionable.paginate(1, 10);
+
+  return new Response(JSON.stringify(actionables), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
 export async function POST(request: Request) {
   // Parse the request body
   const body = await request.json();
