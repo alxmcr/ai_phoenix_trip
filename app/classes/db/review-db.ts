@@ -12,49 +12,69 @@ export class ReviewDB
     Filters<ReviewData>
 {
   async insert(review: Partial<ReviewData>): Promise<ReviewData> {
-    // Check if the trip date is valid
-    if (!review.trip_date) {
-      throw new Error("Trip date is not valid");
+    // check if the review is empty
+    if (Object.keys(review).length === 0) {
+      throw new Error("Review is empty");
     }
 
-    // Check if the transport mode is valid
-    if (!review.transport_mode) {
-      throw new Error("Transport mode is not valid");
-    }
-
-    // Check if the company name is valid
-    if (!review.company_name) {
-      throw new Error("Company name is not valid");
-    }
-
-    // Check if the origin is valid
-    if (!review.origin) {
-      throw new Error("Origin is not valid");
-    }
-
-    // Check if the destination is valid
-    if (!review.destination) {
-      throw new Error("Destination is not valid");
-    }
-
-    // Check if the email is valid
+    // check if the email is empty
     if (!review.email) {
-      throw new Error("Email is not valid");
+      throw new Error("Email is empty");
     }
 
-    // Check if the rating is valid
+    // check if the age_group is empty
+    if (!review.age_group) {
+      throw new Error("Age group is empty");
+    }
+
+    // check if the trip_type is empty
+    if (!review.trip_type) {
+      throw new Error("Trip type is empty");
+    }
+
+    // check if the description is empty
+    if (!review.description) {
+      throw new Error("Description is empty");
+    }
+
+    // check if the transport_mode is empty
+    if (!review.transport_mode) {
+      throw new Error("Transport mode is empty");
+    }
+
+    // check if the rating is empty
     if (!review.rating) {
-      throw new Error("Rating is not valid");
+      throw new Error("Rating is empty");
     }
 
-    // Check if the review text is valid
-    if (!review.review_text) {
-      throw new Error("Review text is not valid");
+    // check if the company_name is empty
+    if (!review.company_name) {
+      throw new Error("Company name is empty");
+    }
+
+    // check if the origin is empty
+    if (!review.origin) {
+      throw new Error("Origin is empty");
+    }
+
+    // check if the destination is empty
+    if (!review.destination) {
+      throw new Error("Destination is empty");
+    }
+
+    // check if the start_date is empty
+    if (!review.start_date) {
+      throw new Error("Start date is empty");
+    }
+
+    // check if the end_date is empty
+    if (!review.end_date) {
+      throw new Error("End date is empty");
     }
 
     const [newReview] = await sql<ReviewData[]>`
-      INSERT INTO review (trip_date, transport_mode, company_name, origin, destination, email, rating, review_text)
-      VALUES (${review.trip_date}, ${review.transport_mode}, ${review.company_name}, ${review.origin}, ${review.destination}, ${review.email}, ${review.rating}, ${review.review_text})
+      INSERT INTO review (email, age_group, trip_type, description, transport_mode, rating, company_name, origin, destination, start_date, end_date)
+      VALUES (${review.email}, ${review.age_group}, ${review.trip_type}, ${review.description}, ${review.transport_mode}, ${review.rating}, ${review.company_name}, ${review.origin}, ${review.destination}, ${review.start_date}, ${review.end_date})
       RETURNING *
     `;
     return newReview;
@@ -139,48 +159,64 @@ export class ReviewDB
 
     const conditions = [];
 
+    // check if the review is empty
     if (filters.review_id) {
       conditions.push(sql`review_id = ${filters.review_id}`);
     }
 
-    if (filters.trip_date) {
-      conditions.push(sql`trip_date = ${filters.trip_date}`);
-    }
-
-    if (filters.transport_mode) {
-      conditions.push(sql`transport_mode = ${filters.transport_mode}`);
-    }
-
-    if (filters.company_name) {
-      conditions.push(sql`company_name = ${filters.company_name}`);
-    }
-
-    if (filters.origin) {
-      conditions.push(sql`origin = ${filters.origin}`);
-    }
-
-    if (filters.destination) {
-      conditions.push(sql`destination = ${filters.destination}`);
-    }
-
+    // check if the email is empty
     if (filters.email) {
       conditions.push(sql`email = ${filters.email}`);
     }
 
+    // check if the age_group is empty
+    if (filters.age_group) {
+      conditions.push(sql`age_group = ${filters.age_group}`);
+    }
+
+    // check if the trip_type is empty
+    if (filters.trip_type) {
+      conditions.push(sql`trip_type = ${filters.trip_type}`);
+    }
+
+    // check if the description is empty
+    if (filters.description) {
+      conditions.push(sql`description = ${filters.description}`);
+    }
+
+    // check if the transport_mode is empty
+    if (filters.transport_mode) {
+      conditions.push(sql`transport_mode = ${filters.transport_mode}`);
+    }
+
+    // check if the rating is empty
     if (filters.rating) {
       conditions.push(sql`rating = ${filters.rating}`);
     }
 
-    if (filters.review_text) {
-      conditions.push(sql`review_text = ${filters.review_text}`);
+    // check if the company_name is empty
+    if (filters.company_name) {
+      conditions.push(sql`company_name = ${filters.company_name}`);
     }
 
-    if (filters.created_at) {
-      conditions.push(sql`created_at = ${filters.created_at}`);
+    // check if the origin is empty
+    if (filters.origin) {
+      conditions.push(sql`origin = ${filters.origin}`);
     }
 
-    if (filters.updated_at) {
-      conditions.push(sql`updated_at = ${filters.updated_at}`);
+    // check if the destination is empty
+    if (filters.destination) {
+      conditions.push(sql`destination = ${filters.destination}`);
+    }
+
+    // check if the start_date is empty
+    if (filters.start_date) {
+      conditions.push(sql`start_date = ${filters.start_date}`);
+    }
+
+    // check if the end_date is empty
+    if (filters.end_date) {
+      conditions.push(sql`end_date = ${filters.end_date}`);
     }
 
     const whereClause =
