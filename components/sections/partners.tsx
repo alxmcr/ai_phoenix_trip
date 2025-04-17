@@ -46,7 +46,6 @@ export default function Partners() {
     const handleAnimationEnd = () => {
       if (container) {
         container.style.animation = "none";
-        container.offsetHeight; // Trigger reflow
         container.style.animation = `scroll 30s linear infinite`;
       }
     };
@@ -59,10 +58,10 @@ export default function Partners() {
   }, [isPaused]);
 
   return (
-    <section className="py-12 bg-background">
-      <div className="container">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold font-inter text-muted-foreground mb-2">
+    <section className="w-full py-12 bg-background">
+      <div className="w-full px-4 mx-auto max-w-7xl">
+        <div className="w-full text-center mb-8">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold font-inter text-muted-foreground mb-2 break-words">
             Trusted by leading companies in the travel industry
           </h2>
         </div>
