@@ -1,9 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
-import LeadCaptureForm from "../forms/lead-capture-form";
+import LeadCaptureForm from "@/components/forms/lead-capture-form";
 
 export default function ShareTravelExperience() {
   return (
-    <section id="form" className="py-20 px-4 md:px-0 w-full flex justify-center">
+    <section
+      id="form"
+      className="py-20 px-4 md:px-0 w-full flex justify-center"
+    >
       <div className="container">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
