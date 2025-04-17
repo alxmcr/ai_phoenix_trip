@@ -20,7 +20,7 @@ export default function LeadCaptureForm() {
     trip_type: "",
     description: "",
     transport_mode: "",
-    rating: 5,
+    rating: 1,
     company_name: "",
     origin: "",
     destination: "",
@@ -58,8 +58,8 @@ export default function LeadCaptureForm() {
         </div>
         <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
-          We've received your trip experience. Our AI is analyzing it now, and
-          we'll send the insights to your email shortly.
+          {`We've received your trip experience. Our AI is analyzing it now, and
+          we'll send the insights to your email shortly.`}
         </p>
         <div className="w-full max-w-md p-6 bg-muted rounded-lg">
           <div className="space-y-4">
@@ -209,7 +209,7 @@ export default function LeadCaptureForm() {
                 key={star}
                 type="button"
                 className={`text-2xl ${
-                  Number.parseInt(formData.rating as any) >= star
+                  Number.parseInt(formData.rating.toString()) >= star
                     ? "text-yellow-500"
                     : "text-gray-300"
                 }`}
@@ -259,6 +259,7 @@ export default function LeadCaptureForm() {
             type="date"
             required
             value={formData.start_date}
+            max={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
           />
         </div>
@@ -271,6 +272,7 @@ export default function LeadCaptureForm() {
             type="date"
             required
             value={formData.end_date}
+            max={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
           />
         </div>
