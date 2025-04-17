@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       });
     }
 
-    // Analyze the review with OpenAI
+    // Send the review to OpenAI for analysis
     const reviewAIResponse = {}
 
     // Return response from OpenAI for the review
