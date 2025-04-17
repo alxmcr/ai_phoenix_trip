@@ -28,6 +28,11 @@ export default function Footer() {
                     Hawaii Vectors by Vecteezy
                   </a>
                 </li>
+                <li>
+                  <a href="https://worldvectorlogo.com/">
+                    Logos by Worldvectorlogo
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
