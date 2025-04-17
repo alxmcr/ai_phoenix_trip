@@ -48,10 +48,10 @@ export async function POST(request: Request) {
     }
 
     // Send the review to OpenAI for analysis
-    const reviewAIResponse = {}
+    // const reviewAIResponse = {}
 
     // Return response from OpenAI for the review
-    return new Response(JSON.stringify(reviewAIResponse), {
+    return new Response(JSON.stringify(newReview), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
     });
