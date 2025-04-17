@@ -12,20 +12,44 @@ export class RecommendationDB
     Filters<RecommendationData>
 {
   async insert(item: Partial<RecommendationData>): Promise<RecommendationData> {
-
     // Check if the review_id is not null or undefined
     if (!item.review_id) {
       throw new Error("Review ID is required");
     }
 
-    // Check if the recommendation_text is not null or undefined
-    if (!item.recommendation_text) {
-      throw new Error("Recommendation Text is required");
+    // Check if the title is not null or undefined
+    if (!item.title) {
+      throw new Error("Title is required");
+    }
+
+    // Check if the description is not null or undefined
+    if (!item.description) {
+      throw new Error("Description is required");
+    }
+
+    // Check if the impact is not null or undefined
+    if (!item.impact) {
+      throw new Error("Impact is required");
+    }
+
+    // Check if the target_area is not null or undefined
+    if (!item.target_area) {
+      throw new Error("Target Area is required");
+    }
+
+    // Check if the effort_level is not null or undefined
+    if (!item.effort_level) {
+      throw new Error("Effort Level is required");
+    }
+
+    // Check if the data_driven is not null or undefined
+    if (!item.data_driven) {
+      throw new Error("Data Driven is required");
     }
 
     const [newRecommendation] = await sql<RecommendationData[]>`
-      INSERT INTO recommendation (recommendation_text, review_id)
-      VALUES (${item.recommendation_text}, ${item.review_id})
+      INSERT INTO recommendation (review_id, title, description, impact, target_area, effort_level, data_driven)
+      VALUES (${item.review_id}, ${item.title}, ${item.description}, ${item.impact}, ${item.target_area}, ${item.effort_level}, ${item.data_driven})
       RETURNING *
     `;
     return newRecommendation;
@@ -110,14 +134,39 @@ export class RecommendationDB
 
     const conditions = [];
 
-    if (filters.recommendation_text) {
-      conditions.push(
-        sql`recommendation_text = ${filters.recommendation_text}`
-      );
-    }
-
+    // Check if the review_id is not null or undefined
     if (filters.review_id) {
       conditions.push(sql`review_id = ${filters.review_id}`);
+    }
+
+    // Check if the title is not null or undefined
+    if (filters.title) {
+      conditions.push(sql`title = ${filters.title}`);
+    }
+
+    // Check if the description is not null or undefined
+    if (filters.description) {
+      conditions.push(sql`description = ${filters.description}`);
+    }
+
+    // Check if the impact is not null or undefined
+    if (filters.impact) {
+      conditions.push(sql`impact = ${filters.impact}`);
+    }
+
+    // Check if the target_area is not null or undefined
+    if (filters.target_area) {
+      conditions.push(sql`target_area = ${filters.target_area}`);
+    }
+
+    // Check if the effort_level is not null or undefined
+    if (filters.effort_level) {
+      conditions.push(sql`effort_level = ${filters.effort_level}`);
+    }
+
+    // Check if the data_driven is not null or undefined
+    if (filters.data_driven) {
+      conditions.push(sql`data_driven = ${filters.data_driven}`);
     }
 
     const whereClause =
