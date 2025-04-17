@@ -29,7 +29,7 @@ export default function Hero() {
         </div>
         <div className="relative h-[300px] md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden">
           <Image
-            src="/travel-001.jpg?height=500&width=500"
+            src="/landing-page/travel-004.jpg?height=500&width=500"
             alt="AI analyzing trip data"
             fill
             className="object-cover"
