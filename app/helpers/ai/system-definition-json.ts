@@ -12,13 +12,7 @@ export const DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON = `
       "score": number,
       "label": string,
       "summary": string,
-      "emotion_tone": string,
-      "aspect_sentiments": {
-        "aspect": number
-      },
-      "keywords": [
-        string
-      ]
+      "emotion_tone": string
     },
     "actionables": [
       {
