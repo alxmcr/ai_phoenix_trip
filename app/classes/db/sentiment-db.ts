@@ -12,25 +12,42 @@ export class SentimentDB
     Filters<SentimentData>
 {
   async insert(item: Partial<SentimentData>): Promise<SentimentData> {
-    // Check if the sentiment text is valid
-    if (!item.sentiment_text) {
-      throw new Error("Sentiment Text is required");
-    }
-
     // Check if the review id is valid
     if (!item.review_id) {
       throw new Error("Review ID is required");
     }
 
+    // check if the score is valid
+    if (!item.score) {
+      throw new Error("Score is required");
+    }
+
+    // check if the label is valid
+    if (!item.label) {
+      throw new Error("Label is required");
+    }
+
+    // check if the summary is valid
+    if (!item.summary) {
+      throw new Error("Summary is required");
+    }
+
+    // check if the emotion tone is valid
+    if (!item.emotion_tone) {
+      throw new Error("Emotion Tone is required");
+    }
+
     const [newSentiment] = await sql<SentimentData[]>`
-      INSERT INTO sentiment (sentiment_text, review_id)
-      VALUES (${item.sentiment_text}, ${item.review_id})
+      INSERT INTO sentiment (review_id, score, "label", summary, emotion_tone)
+      VALUES (${item.review_id}, ${item.score}, ${item.label}, ${item.summary}, ${item.emotion_tone})
       RETURNING *
     `;
     return newSentiment;
   }
 
-  async insertMany(sentiments: Partial<SentimentData>[]): Promise<SentimentData[]> {
+  async insertMany(
+    sentiments: Partial<SentimentData>[]
+  ): Promise<SentimentData[]> {
     // check it the sentiments are empty
     if (sentiments.length === 0) {
       throw new Error("Sentiments are empty");
@@ -99,12 +116,29 @@ export class SentimentDB
 
     const conditions = [];
 
-    if (filters.sentiment_text) {
-      conditions.push(sql`sentiment_text = ${filters.sentiment_text}`);
-    }
-
+    // Check if the review id is valid
     if (filters.review_id) {
       conditions.push(sql`review_id = ${filters.review_id}`);
+    }
+
+    // check if the score is valid
+    if (filters.score) {
+      conditions.push(sql`score = ${filters.score}`);
+    }
+
+    // check if the label is valid
+    if (filters.label) {
+      conditions.push(sql`label = ${filters.label}`);
+    }
+
+    // check if the summary is valid
+    if (filters.summary) {
+      conditions.push(sql`summary = ${filters.summary}`);
+    }
+
+    // check if the emotion tone is valid
+    if (filters.emotion_tone) {
+      conditions.push(sql`emotion_tone = ${filters.emotion_tone}`);
     }
 
     const whereClause =
