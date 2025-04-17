@@ -19,8 +19,6 @@ interface HeroSectionProps {
 }
 
 export function Hero({ review }: HeroSectionProps) {
-  console.log("🚀 ~ Hero ~ review:", review);
-
   const shareOnTwitter = (id: string) => {
     const url = `${window.location.origin}/reviews/${id}`;
     const text = `Check out this review on Acme AI!`;
