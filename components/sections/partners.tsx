@@ -58,7 +58,7 @@ export default function Partners() {
   }, [isPaused]);
 
   return (
-    <section className="w-full py-12 bg-background">
+    <section className="w-full py-12 bg-muted/50">
       <div className="w-full px-4 mx-auto max-w-7xl">
         <div className="w-full text-center mb-8">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold font-inter text-muted-foreground mb-2 break-words">
@@ -92,7 +92,7 @@ export default function Partners() {
             {allPartners.map((partner, index) => (
               <div
                 key={`${partner.name}-${index}`}
-                className="bg-white dark:bg-gray-800 p-4 rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center h-20 w-32"
+                className="bg-white p-4 rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center h-20 w-32"
               >
                 <Image
                   src={partner.logo || "/placeholder.svg"}
