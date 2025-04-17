@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20">
+    <section id="how-it-works" className="py-20 px-4 md:px-0">
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
