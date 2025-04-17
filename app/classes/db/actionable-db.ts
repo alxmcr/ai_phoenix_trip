@@ -18,9 +18,34 @@ export class ActionableDB
       throw new Error("Review ID is required");
     }
 
-    // Check if the action_text is not null or undefined
-    if (!item.action_text) {
-      throw new Error("Action Text is required");
+    // Check if the title is not null or undefined
+    if (!item.title) {
+      throw new Error("Title is required");
+    }
+
+    // Check if the description is not null or undefined
+    if (!item.description) {
+      throw new Error("Description is required");
+    }
+
+    // Check if the priority is not null or undefined
+    if (!item.priority) {
+      throw new Error("Priority is required");
+    }
+
+    // Check if the department is not null or undefined
+    if (!item.department) {
+      throw new Error("Department is required");
+    }
+
+    // Check if the category is not null or undefined
+    if (!item.category) {
+      throw new Error("Category is required");
+    }
+
+    // Check if the source_aspect is not null or undefined
+    if (!item.source_aspect) {
+      throw new Error("Source Aspect is required");
     }
 
     // Check if the review_id exists
@@ -32,8 +57,8 @@ export class ActionableDB
       throw new Error("Review not found");
     } else {
       const [newActionable] = await sql<ActionableData[]>`
-        INSERT INTO actionable (action_text, review_id)
-        VALUES (${item.action_text}, ${item.review_id})
+        INSERT INTO actionable (review_id, title, description, priority, department, category, source_aspect)
+        VALUES (${item.review_id}, ${item.title}, ${item.description}, ${item.priority}, ${item.department}, ${item.category}, ${item.source_aspect})
         RETURNING *
       `;
       return newActionable;
@@ -110,12 +135,39 @@ export class ActionableDB
 
     const conditions = [];
 
-    if (filters.action_text) {
-      conditions.push(sql`action_text = ${filters.action_text}`);
-    }
-
+    // Check if the review_id is not null or undefined
     if (filters.review_id) {
       conditions.push(sql`review_id = ${filters.review_id}`);
+    }
+
+    // Check if the title is not null or undefined
+    if (filters.title) {
+      conditions.push(sql`title = ${filters.title}`);
+    }
+
+    // Check if the description is not null or undefined
+    if (filters.description) {
+      conditions.push(sql`description = ${filters.description}`);
+    }
+
+    // Check if the priority is not null or undefined
+    if (filters.priority) {
+      conditions.push(sql`priority = ${filters.priority}`);
+    }
+
+    // Check if the department is not null or undefined
+    if (filters.department) {
+      conditions.push(sql`department = ${filters.department}`);
+    }
+
+    // Check if the category is not null or undefined
+    if (filters.category) {
+      conditions.push(sql`category = ${filters.category}`);
+    }
+
+    // Check if the source_aspect is not null or undefined
+    if (filters.source_aspect) {
+      conditions.push(sql`source_aspect = ${filters.source_aspect}`);
     }
 
     const whereClause =
