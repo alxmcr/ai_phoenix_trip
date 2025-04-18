@@ -23,7 +23,7 @@ export default function Hero() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="#dashboard">View dashboard</Link>
+              <Link href="/dashboard">View dashboard</Link>
             </Button>
           </div>
         </div>

@@ -22,6 +22,9 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-6">
+            <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+              Dashboard
+            </Link>
             <Link href="#features" className="text-sm font-medium transition-colors hover:text-primary">
               Features
             </Link>
@@ -49,7 +52,7 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden container py-4 pb-6">
+        <div className="md:hidden container py-4 pb-6 px-2 md:px-0">
           <nav className="flex flex-col gap-4">
             <Link
               href="#features"
