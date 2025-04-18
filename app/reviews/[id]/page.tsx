@@ -1,6 +1,10 @@
 import { ReviewAIResponse } from "@/app/types/ai/review-ai-response";
 import Footer from "@/components/sections/footer";
 import { Hero } from "@/components/sections/review-page/hero";
+import { Sentiment } from "@/components/sections/review-page/sentiment-section";
+import HeroSkeleton from "@/components/skeletons/hero-skeleton";
+import { SentimentSkeleton } from "@/components/skeletons/sentiment-skeleton";
+import { Suspense } from "react";
 
 export default async function ReviewPage({
   params,
@@ -28,7 +32,13 @@ export default async function ReviewPage({
 
   return (
     <main className="flex flex-col min-h-screen items-center">
-      <Hero review={reviewAnalyzed.review} />
+      <Suspense fallback={<HeroSkeleton />}>
+        <Hero review={reviewAnalyzed.review} />
+      </Suspense>
+
+      <Suspense fallback={<SentimentSkeleton />}>
+        <Sentiment sentiment={reviewAnalyzed.sentiment} />
+      </Suspense>
       <Footer />
     </main>
   );
