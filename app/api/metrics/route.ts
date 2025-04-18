@@ -43,7 +43,6 @@ export async function GET() {
       totalActionablesInPastMonth,
     },
   };
-  console.log("🚀 ~ GET ~ metrics:", metrics)
 
   // return Response
   return new Response(JSON.stringify(metrics), {
