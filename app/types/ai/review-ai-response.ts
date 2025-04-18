@@ -5,7 +5,7 @@ import { SentimentData } from "../db/sentiment";
 
 export type ReviewAIResponse = {
   review: ReviewData;
-  actionables: Partial<ActionableData>[];
-  sentiments: Partial<SentimentData>[];
-  recommendations: Partial<RecommendationData>[];
+  sentiment: SentimentData;
+  actionables: ActionableData[];
+  recommendations: RecommendationData[];
 };

@@ -3,6 +3,7 @@ import { RecommendationDB } from "@/app/classes/db/recommendation-db";
 import { ReviewDB } from "@/app/classes/db/review-db";
 import { SentimentDB } from "@/app/classes/db/sentiment-db";
 import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { ReviewAIResponse } from "@/app/types/ai/review-ai-response";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
 
@@ -44,13 +45,13 @@ export async function GET(
     });
   }
 
-  // Filter actionables by review id
-  const actionables = await dbActionable.filter({
+  // Filter sentiments by review id
+  const sentiments = await dbSentiment.filter({
     review_id: rowReview.review_id,
   });
 
-  // Filter sentiments by review id
-  const sentiments = await dbSentiment.filter({
+  // Filter actionables by review id
+  const actionables = await dbActionable.filter({
     review_id: rowReview.review_id,
   });
 
@@ -59,11 +60,27 @@ export async function GET(
     review_id: rowReview.review_id,
   });
 
+  // If the sentiments is not valid, return a 404 error
+  if (!sentiments) {
+    return new Response(JSON.stringify({ error: "Sentiment not found" }), {
+      status: HTTPResponseCode.NOT_FOUND,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // If the sentiments array is empty, return a 404 error
+  if (sentiments.length === 0) {
+    return new Response(JSON.stringify({ error: "Sentiment not found" }), {
+      status: HTTPResponseCode.NOT_FOUND,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   // Build the response
-  const response = {
+  const response: ReviewAIResponse = {
     review: rowReview,
     actionables: actionables,
-    sentiments: sentiments,
+    sentiment: sentiments[0],
     recommendations: recommendations,
   };
 

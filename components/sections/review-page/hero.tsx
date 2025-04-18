@@ -48,7 +48,7 @@ export function Hero({ review }: HeroSectionProps) {
   };
 
   return (
-    <section className="mb-8">
+    <section className="mb-8 px-4 md:px-0 container">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Review Analysis</h1>
@@ -149,7 +149,9 @@ export function Hero({ review }: HeroSectionProps) {
                 <div>
                   <p className="text-sm font-medium">Travel Date</p>
                   <p className="text-sm text-muted-foreground">
-                    {`${review.start_date} to ${review.end_date}`}
+                    {`${formatDate(review.start_date)} to ${formatDate(
+                      review.end_date
+                    )}`}
                   </p>
                 </div>
                 <div>
