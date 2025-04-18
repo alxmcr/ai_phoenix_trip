@@ -258,7 +258,7 @@ export class ReviewDB
     const [result] = await sql<{ average_rating: number }[]>`
       SELECT AVG(rating) as average_rating FROM review
     `;
-    console.log("🚀 ~ getAverageRating ~ result:", result)
+
     return Number(result.average_rating);
   }
 

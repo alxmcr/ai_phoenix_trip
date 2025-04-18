@@ -1,3 +1,4 @@
+import { RecommendationDB } from "@/app/classes/db/recommendation-db";
 import { RecommendationData } from "@/app/types/db/recommendation";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -8,18 +9,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+const dbRecommendation = new RecommendationDB();
+
+async function getTopRecommendations() {
+  const recommendations = await dbRecommendation.paginate(1, 5);
+  return recommendations;
+}
+
 export default async function TopRecommendations() {
-  // Next.js API url by environment variable
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  let recommendations: RecommendationData[] = [];
 
-  // Endpoint to GET recommendation
-  const endpoint = `${baseUrl}/api/recommendations?page=1&limit=5`;
-
-  // Fetch the recommendation
-  const response = await fetch(endpoint);
-
-  // Recommendations
-  const recommendations = (await response.json()) as RecommendationData[];
+  try {
+    recommendations = await getTopRecommendations();
+  } catch (error) {
+    console.log("🚀 ~ TopRecommendations ~ error:", error);
+  }
 
   // Function to get badge variant based on impact
   const getImpactBadge = (impact: string) => {

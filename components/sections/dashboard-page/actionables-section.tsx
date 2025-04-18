@@ -1,3 +1,4 @@
+import { ActionableDB } from "@/app/classes/db/actionable-db";
 import { ActionableData } from "@/app/types/db/actionable";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -8,18 +9,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+const dbActionable = new ActionableDB();
+
+async function getActionableInsights() {
+  const actionables = await dbActionable.paginate(1, 5);
+
+  return actionables;
+}
+
 export default async function ActionableInsights() {
-  // Next.js API url by environment variable
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  let actionableInsights: ActionableData[] = [];
 
-  // Endpoint to GET actionable insights
-  const endpoint = `${baseUrl}/api/actionables?page=1&limit=5`;
+  try {
+    actionableInsights = await getActionableInsights();
+  } catch (error) {
+    console.log("🚀 ~ ActionableInsights ~ error:", error);
+  }
 
-  // Fetch the actionable insights
-  const response = await fetch(endpoint);
-
-  // Actionable insights
-  const actionableInsights = (await response.json()) as ActionableData[];
+  if (!actionableInsights) {
+    return <div>Error loading actionable insights</div>;
+  }
 
   // Function to get badge variant based on priority
   const getPriorityBadge = (priority: string) => {
@@ -34,6 +43,10 @@ export default async function ActionableInsights() {
         return <Badge variant="outline">{priority}</Badge>;
     }
   };
+
+  if (!actionableInsights) {
+    return <div>Error loading actionable insights</div>;
+  }
 
   return (
     <Card className="col-span-1">

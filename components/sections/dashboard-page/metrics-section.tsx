@@ -2,21 +2,13 @@ import { Metrics } from "@/app/types/metrics/metrics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, Star, TrendingUp, Users } from "lucide-react";
 
-export default async function MetricsSection() {
-  // Next.js API url by environment variable
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+type Props = {
+  metrics: Metrics;
+};
 
-  // Endpoint to GET review data
-  const endpoint = `${baseUrl}/api/metrics`;
-
-  // Fetch the metrics
-  const response = await fetch(endpoint);
-
-  // Metrics
-  const metrics = (await response.json()) as Metrics;
-
-  const reviewsCount = await metrics.current.totalReviews;
-  const averageRating = await metrics.current.averageRating;
+export default async function MetricsSection({ metrics }: Props) {
+  const reviewsCount = metrics.current.totalReviews;
+  const averageRating = metrics.current.averageRating;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 container">
