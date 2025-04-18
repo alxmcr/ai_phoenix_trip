@@ -157,4 +157,20 @@ export class SentimentDB
 
     return sentiment;
   }
+
+  async getAverageSentimentScore(): Promise<number> {
+    // get the average sentiment score of the reviews
+    const [result] = await sql<{ average_sentiment_score: number }[]>`
+      SELECT AVG(score) as average_sentiment_score FROM sentiment
+    `;
+    return Number(result.average_sentiment_score);
+  }
+
+  async getAverageSentimentScoreInPastMonth(): Promise<number> {
+    // get the average sentiment score of the reviews in the past month
+    const [result] = await sql<{ average_sentiment_score: number }[]>`
+      SELECT AVG(score) as average_sentiment_score FROM sentiment WHERE created_at >= NOW() - INTERVAL '1 month'
+    `;
+    return Number(result.average_sentiment_score);
+  }
 }

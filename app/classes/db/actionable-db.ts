@@ -186,4 +186,20 @@ export class ActionableDB
 
     return actionable;
   }
+
+  async count(): Promise<number> {
+    // get the total number of actionables
+    const [result] = await sql<{ count: number }[]>`
+      SELECT COUNT(*) FROM actionable
+    `;
+    return Number(result.count);
+  }
+
+  async getCountOfActionablesInPastMonth(): Promise<number> {
+    // get the total number of actionables in the past month
+    const [result] = await sql<{ count: number }[]>`
+      SELECT COUNT(*) FROM actionable WHERE created_at >= NOW() - INTERVAL '1 month'
+    `;
+    return Number(result.count);
+  }
 }

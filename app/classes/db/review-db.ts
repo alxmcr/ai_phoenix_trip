@@ -235,4 +235,38 @@ export class ReviewDB
 
     return review;
   }
+
+  async count(): Promise<number> {
+    // get the total number of reviews
+    const [result] = await sql<{ count: number }[]>`
+      SELECT COUNT(*) FROM review
+    `;
+    return Number(result.count);
+  }
+
+  // get count of reviews in the past month
+  async getCountOfReviewsInPastMonth(): Promise<number> {
+    // get the total number of reviews
+    const [result] = await sql<{ count: number }[]>`
+      SELECT COUNT(*) FROM review WHERE created_at >= NOW() - INTERVAL '1 month'
+    `;
+    return Number(result.count);
+  }
+
+  async getAverageRating(): Promise<number> {
+    // get the average rating of the reviews
+    const [result] = await sql<{ average_rating: number }[]>`
+      SELECT AVG(rating) as average_rating FROM review
+    `;
+    console.log("🚀 ~ getAverageRating ~ result:", result)
+    return Number(result.average_rating);
+  }
+
+  async getAverageRatingInPastMonth(): Promise<number> {
+    // get the average rating of the reviews in the past month
+    const [result] = await sql<{ average_rating: number }[]>`
+      SELECT AVG(rating) as average_rating FROM review WHERE created_at >= NOW() - INTERVAL '1 month'
+    `;
+    return Number(result.average_rating);
+  }
 }
