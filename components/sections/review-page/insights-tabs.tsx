@@ -91,7 +91,7 @@ export function InsightsTabs({
                             {item.title}
                           </h3>
                           <Badge className={getPriorityColor(item.priority)}>
-                            {item.priority} Priority
+                            Priority: {item.priority.toLocaleUpperCase()}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-4">
@@ -143,7 +143,7 @@ export function InsightsTabs({
                           </h3>
                           <div className="flex gap-2">
                             <Badge className={getPriorityColor(item.impact)}>
-                              {item.impact} Impact
+                               Impact: {item.impact.toLocaleUpperCase()}
                             </Badge>
                             {item.data_driven && (
                               <Badge
@@ -171,7 +171,7 @@ export function InsightsTabs({
                             variant="outline"
                             className={getPriorityColor(item.effort_level)}
                           >
-                            {item.effort_level} Effort
+                            Effort: {item.effort_level.toLocaleUpperCase()}
                           </Badge>
                         </div>
                       </div>

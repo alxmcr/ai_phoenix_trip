@@ -77,7 +77,7 @@ export function Sentiment({ sentiment }: Props) {
                 key={sentiment.label}
                 className={getLabelColor(sentiment.label)}
               >
-                {sentiment.label}
+                {sentiment.label.toLocaleUpperCase()}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">{sentiment.summary}</p>
