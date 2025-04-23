@@ -81,7 +81,10 @@ export default async function DashboardPage() {
           <ActionableInsights />
           <TopRecommendations />
         </div>
-        <ReviewsPaginatedSection />
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 container py-4">
+          <ReviewsPaginatedSection />
+        </div>
       </Suspense>
     </main>
   );
