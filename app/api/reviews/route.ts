@@ -1,5 +1,10 @@
 import { ReviewDB } from "@/app/classes/db/review-db";
+import { ReviewResponseHandler } from "@/app/classes/db/review-response-handler";
+import { ReviewAnalysis } from "@/app/classes/open-ai/review-analysis";
 import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
+import { HTTPResponse } from "@/app/generics/http-response";
+import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
+import { ResponseReviewInsert } from "@/app/types/api/response-review";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
 
@@ -10,7 +15,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Check if this is a paginated request
-    const isPaginated = searchParams.has("page") || searchParams.has("pageSize");
+    const isPaginated =
+      searchParams.has("page") || searchParams.has("pageSize");
 
     if (isPaginated) {
       // Handle paginated request
@@ -28,7 +34,8 @@ export async function GET(request: NextRequest) {
       if (searchQuery || transportFilter !== "all") {
         reviews = await dbReview.filter({
           company_name: searchQuery || undefined,
-          transport_mode: transportFilter !== "all" ? transportFilter : undefined,
+          transport_mode:
+            transportFilter !== "all" ? transportFilter : undefined,
         });
       } else {
         reviews = await dbReview.paginate(page, pageSize);
@@ -61,51 +68,47 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error)
-    return new Response(
-      JSON.stringify({ error: "Failed to fetch reviews" }),
-      {
-        status: HTTPResponseCode.INTERNAL_SERVER_ERROR,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    console.log("🚀 ~ GET ~ error:", error);
+    return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), {
+      status: HTTPResponseCode.INTERNAL_SERVER_ERROR,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
 export async function POST(request: Request) {
-  // Parse the request body
-  const body = await request.json();
-
   try {
-    //Insert new Review into your DB
-    const newReview = await dbReview.insert(body);
+    // Parse the request body
+    const review = await request.json();
 
-    // check if newAction is not null or undefined
-    if (!newReview) {
-      return new Response(
-        JSON.stringify({ error: "Failed to create Review" }),
-        {
-          status: HTTPResponseCode.BAD_REQUEST,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
+    const reviewAnalysis = new ReviewAnalysis();
+    const responseHandler = new ReviewResponseHandler();
 
-    // Validate UUID
-    const reviewId = newReview.review_id;
+    // Analyze the review and get the analysis
+    const analysis: ResponseOpenAITravelReviewAnalysis =
+      await reviewAnalysis.analyzeReview(review);
 
-    if (!validateUUID(reviewId)) {
+    // Handle the response data
+    const processedAnalysis = await responseHandler.handleResponse(
+      review,
+      analysis
+    );
+
+    // Check if the review id is UUID valid
+    if (!validateUUID(processedAnalysis.review_id)) {
       return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
         status: HTTPResponseCode.BAD_REQUEST,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Send the review to OpenAI for analysis
-    // const reviewAIResponse = {}
+    // Create HTTP response with the results analysis
+    const httpResponse: HTTPResponse<ResponseReviewInsert> = {
+      message: "Review analyzed successfully",
+      data: processedAnalysis,
+    };
 
-    // Return response from OpenAI for the review
-    return new Response(JSON.stringify(newReview), {
+    return new Response(JSON.stringify(httpResponse), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
     });
