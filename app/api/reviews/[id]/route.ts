@@ -60,22 +60,6 @@ export async function GET(
     review_id: rowReview.review_id,
   });
 
-  // If the sentiments is not valid, return a 404 error
-  if (!sentiments) {
-    return new Response(JSON.stringify({ error: "Sentiment not found" }), {
-      status: HTTPResponseCode.NOT_FOUND,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  // If the sentiments array is empty, return a 404 error
-  if (sentiments.length === 0) {
-    return new Response(JSON.stringify({ error: "Sentiment not found" }), {
-      status: HTTPResponseCode.NOT_FOUND,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
   // Build the response
   const response: ReviewAIResponse = {
     review: rowReview,
