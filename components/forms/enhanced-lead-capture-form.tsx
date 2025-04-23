@@ -1,15 +1,16 @@
 "use client";
 
-import type React from "react";
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 export default function EnhancedLeadCaptureForm() {
+  const review_id = `REV-${Math.floor(Math.random() * 10000)}`;
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -20,7 +21,6 @@ export default function EnhancedLeadCaptureForm() {
 
   // Update the form state to include all fields
   const [formData, setFormData] = useState({
-    review_id: `REV-${Math.floor(Math.random() * 10000)}`,
     email: "",
     age_group: "",
     trip_type: "",
@@ -32,8 +32,6 @@ export default function EnhancedLeadCaptureForm() {
     destination: "",
     start_date: "",
     end_date: "",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
   });
 
   const handleChange = (
@@ -80,7 +78,7 @@ export default function EnhancedLeadCaptureForm() {
     setTimeout(() => {
       // In a real app, you would save the data to a database here
       // and get the actual ID from the database
-      router.push(`/reviews/${formData.review_id}`);
+      router.push(`/reviews/${review_id}`);
     }, 2000);
   };
 
@@ -106,7 +104,7 @@ export default function EnhancedLeadCaptureForm() {
         <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
           {`We've received your trip experience. Your review ID is `}
-          <span className="font-semibold">{formData.review_id}</span>.
+          <span className="font-semibold">{review_id}</span>.
         </p>
         <div className="w-full max-w-md p-6 bg-muted rounded-lg mb-6">
           <p className="text-center mb-4">
@@ -141,10 +139,6 @@ export default function EnhancedLeadCaptureForm() {
   // Form JSX remains the same as before
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <input type="hidden" name="review_id" value={formData.review_id} />
-      <input type="hidden" name="created_at" value={formData.created_at} />
-      <input type="hidden" name="updated_at" value={formData.updated_at} />
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="email">Email Address</Label>
