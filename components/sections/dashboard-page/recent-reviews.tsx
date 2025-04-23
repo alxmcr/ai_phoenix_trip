@@ -43,7 +43,7 @@ import Link from "next/link";
 // Helper data
 const dbReview = new ReviewDB();
 
-export default async function RecentReviews() {
+export default function RecentReviews() {
   const totalPages = 5;
   const [reviews, setReviews] = React.useState<ReviewData[]>([]);
   const [currentPage, setCurrentPage] = React.useState(1);
