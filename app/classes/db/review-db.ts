@@ -167,27 +167,27 @@ export class ReviewDB
 
     // check if the email is empty
     if (filters.email) {
-      conditions.push(sql`email = ${filters.email}`);
+      conditions.push(sql`email ILIKE ${`%${filters.email}%`}`);
     }
 
     // check if the age_group is empty
     if (filters.age_group) {
-      conditions.push(sql`age_group = ${filters.age_group}`);
+      conditions.push(sql`age_group ILIKE ${`%${filters.age_group}%`}`);
     }
 
     // check if the trip_type is empty
     if (filters.trip_type) {
-      conditions.push(sql`trip_type = ${filters.trip_type}`);
+      conditions.push(sql`trip_type ILIKE ${`%${filters.trip_type}%`}`);
     }
 
     // check if the description is empty
     if (filters.description) {
-      conditions.push(sql`description = ${filters.description}`);
+      conditions.push(sql`description ILIKE ${`%${filters.description}%`}`);
     }
 
     // check if the transport_mode is empty
     if (filters.transport_mode) {
-      conditions.push(sql`transport_mode = ${filters.transport_mode}`);
+      conditions.push(sql`transport_mode ILIKE ${`%${filters.transport_mode}%`}`);
     }
 
     // check if the rating is empty
@@ -197,17 +197,17 @@ export class ReviewDB
 
     // check if the company_name is empty
     if (filters.company_name) {
-      conditions.push(sql`company_name = ${filters.company_name}`);
+      conditions.push(sql`company_name ILIKE ${`%${filters.company_name}%`}`);
     }
 
     // check if the origin is empty
     if (filters.origin) {
-      conditions.push(sql`origin = ${filters.origin}`);
+      conditions.push(sql`origin ILIKE ${`%${filters.origin}%`}`);
     }
 
     // check if the destination is empty
     if (filters.destination) {
-      conditions.push(sql`destination = ${filters.destination}`);
+      conditions.push(sql`destination ILIKE ${`%${filters.destination}%`}`);
     }
 
     // check if the start_date is empty
