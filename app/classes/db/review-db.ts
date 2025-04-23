@@ -133,6 +133,7 @@ export class ReviewDB
   }
 
   async filter(filters: Partial<ReviewData>): Promise<ReviewData[]> {
+    console.log("🚀 ~ filter ~ filters:", filters)
     // Validate that only valid ReviewData fields are present
     const validFields = [
       "review_id",
