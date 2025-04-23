@@ -63,7 +63,7 @@ export function InsightsTabs({
 
   return (
     <Tabs defaultValue="actionables" className="w-full">
-      <TabsList className="grid w-full grid-cols-2 mb-6">
+      <TabsList className="grid w-full grid-cols-2 mb-6 h-15">
         <TabsTrigger value="actionables" className="flex items-center gap-2">
           <Briefcase className="h-4 w-4" />
           Actionables
