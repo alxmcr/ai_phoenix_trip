@@ -1,5 +1,6 @@
 import ActionableInsights from "@/components/sections/dashboard-page/actionables-section";
 import MetricsSection from "@/components/sections/dashboard-page/metrics-section";
+import RecentReviews from "@/components/sections/dashboard-page/recent-reviews";
 import TopRecommendations from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
@@ -80,6 +81,7 @@ export default async function DashboardPage() {
           <ActionableInsights />
           <TopRecommendations />
         </div>
+        <RecentReviews />
       </Suspense>
     </main>
   );
