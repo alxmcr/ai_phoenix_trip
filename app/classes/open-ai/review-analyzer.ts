@@ -1,19 +1,19 @@
 import { openai } from "@/app/config/ai/openai-client";
 import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/config/ai/openai-system-directives";
 import { OpenAIMessageRoles } from "@/app/enums/openai/openai-message-roles";
-import { OpenAIModelsCostOptimized } from "@/app/enums/openai/openai-models";
+import { OpenAIModels } from "@/app/enums/openai/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai/openai-temperatures";
 import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ReviewData } from "@/app/types/db/review";
 
 export class ReviewAnalyzer {
-  private model: OpenAIModelsCostOptimized;
+  private model: OpenAIModels;
   private temperature: OpenAITemperatures;
   private directiveSystem: string;
   private maxTokens: number;
 
   constructor() {
-    this.model = OpenAIModelsCostOptimized.GPT_3_5_TURBO;
+    this.model = OpenAIModels.GPT_3_5_TURBO;
     this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
     this.directiveSystem = TRAVEL_ASSISTANT_REVIEW_ANALYZER;
     this.maxTokens = 2000;
