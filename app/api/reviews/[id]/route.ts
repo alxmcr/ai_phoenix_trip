@@ -3,7 +3,7 @@ import { RecommendationDB } from "@/app/classes/db/recommendation-db";
 import { ReviewDB } from "@/app/classes/db/review-db";
 import { SentimentDB } from "@/app/classes/db/sentiment-db";
 import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
-import { ReviewAIResponse } from "@/app/types/ai/review-ai-response";
+import { ResponseReviewGet } from "@/app/types/api/response-review";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
 
@@ -61,7 +61,7 @@ export async function GET(
   });
 
   // Build the response
-  const response: ReviewAIResponse = {
+  const response: ResponseReviewGet = {
     review: rowReview,
     actionables: actionables,
     sentiment: sentiments[0],
