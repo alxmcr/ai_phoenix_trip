@@ -94,6 +94,14 @@ export async function POST(request: Request) {
       analysis
     );
 
+    // Check if the review id is UUID valid
+    if (!validateUUID(processedAnalysis.review_id)) {
+      return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
+        status: HTTPResponseCode.BAD_REQUEST,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     // Create HTTP response with the results analysis
     const httpResponse: HTTPResponse<ResponseReviewInsert> = {
       message: "Review analyzed successfully",
