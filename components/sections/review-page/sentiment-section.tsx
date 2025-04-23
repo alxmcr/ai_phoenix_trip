@@ -20,12 +20,12 @@ export function Sentiment({ sentiment }: Props) {
       return <div>No sentiment data available</div>;
     }
 
-    switch (sentiment.label) {
-      case "Positive":
+    switch (sentiment.label.toLowerCase()) {
+      case "positive":
         return <Smile className="h-16 w-16 text-emerald-500" />;
-      case "Neutral":
+      case "neutral":
         return <Meh className="h-16 w-16 text-blue-500" />;
-      case "Negative":
+      case "negative":
         return <Frown className="h-16 w-16 text-rose-500" />;
       default:
         return <div>No sentiment data available</div>;
@@ -75,7 +75,7 @@ export function Sentiment({ sentiment }: Props) {
             <div className="flex flex-wrap gap-2 mb-4">
               <Badge
                 key={sentiment.label}
-                className={getLabelColor(sentiment.label)}
+                className={getLabelColor(sentiment.label.toLowerCase())}
               >
                 {sentiment.label.toLocaleUpperCase()}
               </Badge>
