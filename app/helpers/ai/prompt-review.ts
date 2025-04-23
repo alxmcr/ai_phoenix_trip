@@ -41,13 +41,13 @@ export function buildPromptReview(review: ReviewData) {
     throw new Error("Invalid review text");
   }
 
-  // check if start_date is valid
-  if (review.start_date) {
+  // check if start_date is null or undefined
+  if (!review.start_date) {
     throw new Error("Invalid start date");
   }
 
-  // check if end_date is valid
-  if (review.end_date) {
+  // check if end_date is null or undefined
+  if (!review.end_date) {
     throw new Error("Invalid end date");
   }
 
