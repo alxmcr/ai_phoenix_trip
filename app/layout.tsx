@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  title: {
+    template: "%s | Phoenix Trip",
+    default: "Phoenix Trip",
+  },
   icons: {
     icon: "/logo-phoenix-trip-ai-16x16.svg",
     apple: "/logo-phoenix-trip-ai-16x16.svg",
