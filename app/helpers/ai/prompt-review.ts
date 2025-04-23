@@ -62,13 +62,13 @@ export function buildPromptReview(review: ReviewData) {
   return `
       Analyze the following travel review and provide insights:
 
-      - Age Group: ${review.age_group}
-      - Trip Type: ${review.trip_type}
-      - Transport Mode: ${review.transport_mode}
-      - Company: ${review.company_name}
+      - Age Group: ${review.age_group}.
+      - Trip Type: ${review.trip_type}.
+      - Transport Mode: ${review.transport_mode}.
+      - Company: ${review.company_name}.
       - Rating: ${review.rating}/5
-      - Route: From ${review.origin} to ${review.destination}
+      - Route: From ${review.origin} to ${review.destination}.
       - Travel dates: ${startDateString} to ${endDateString}.
-      - Review: "${review.description}"
+      - Review: ${review.description}.
   `;
 }
