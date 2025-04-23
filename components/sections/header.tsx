@@ -1,13 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
-import { ModeToggle } from "@/components/mode-toggle"
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isLandingPage = pathname === "/";
 
   return (
     <header className="flex flex-col items-center md:flex-row md:justify-center sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -22,31 +25,49 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link
+              href="/dashboard"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
               Dashboard
             </Link>
-            <Link href="#features" className="text-sm font-medium transition-colors hover:text-primary">
-              Features
-            </Link>
-            <Link href="#how-it-works" className="text-sm font-medium transition-colors hover:text-primary">
-              How It Works
-            </Link>
-            <Link href="#form" className="text-sm font-medium transition-colors hover:text-primary">
-              Share Experience
-            </Link>
+            {isLandingPage && (
+              <>
+                <Link
+                  href="#features"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Features
+                </Link>
+                <Link
+                  href="#how-it-works"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                >
+                  How It Works
+                </Link>
+              </>
+            )}
           </nav>
           <div className="flex items-center gap-2">
             <ModeToggle />
             <Button asChild>
-              <Link href="#form">Get Started</Link>
+              <Link href="/">Share Experience</Link>
             </Button>
           </div>
         </div>
 
         <div className="md:hidden flex items-center gap-2">
           <ModeToggle />
-          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
       </div>
@@ -54,20 +75,24 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden container py-4 pb-6 px-2 md:px-0">
           <nav className="flex flex-col gap-4">
-            <Link
-              href="#features"
-              className="text-sm font-medium transition-colors hover:text-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Features
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="text-sm font-medium transition-colors hover:text-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              How It Works
-            </Link>
+            {isLandingPage && (
+              <>
+                <Link
+                  href="#features"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Features
+                </Link>
+                <Link
+                  href="#how-it-works"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  How It Works
+                </Link>
+              </>
+            )}
             <Link
               href="#form"
               className="text-sm font-medium transition-colors hover:text-primary"
@@ -84,5 +109,5 @@ export default function Header() {
         </div>
       )}
     </header>
-  )
+  );
 }
