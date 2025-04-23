@@ -1,8 +1,8 @@
 import { openai } from "@/app/config/ai/openai-client";
 import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/config/ai/openai-system-directives";
-import { OpenAIMessageRoles } from "@/app/enums/openai-message-roles";
-import { OpenAIModelsCostOptimized } from "@/app/enums/openai-models";
-import { OpenAITemperatures } from "@/app/enums/openai-temperatures";
+import { OpenAIMessageRoles } from "@/app/enums/openai/openai-message-roles";
+import { OpenAIModelsCostOptimized } from "@/app/enums/openai/openai-models";
+import { OpenAITemperatures } from "@/app/enums/openai/openai-temperatures";
 import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ReviewData } from "@/app/types/db/review";
 

@@ -1,5 +1,5 @@
 import { ReviewDB } from "@/app/classes/db/review-db";
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
 
