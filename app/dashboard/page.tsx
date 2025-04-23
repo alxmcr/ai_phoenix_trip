@@ -81,6 +81,7 @@ export default async function DashboardPage() {
           <ActionableInsights />
           <TopRecommendations />
         </div>
+        <RecentReviews />
       </Suspense>
     </main>
   );
