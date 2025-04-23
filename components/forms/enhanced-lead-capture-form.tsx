@@ -1,20 +1,22 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function EnhancedLeadCaptureForm() {
-  const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [loadingText, setLoadingText] = useState("Analyzing your trip experience")
-  const [loadingStep, setLoadingStep] = useState(0)
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loadingText, setLoadingText] = useState(
+    "Analyzing your trip experience"
+  );
+  const [loadingStep, setLoadingStep] = useState(0);
 
   // Update the form state to include all fields
   const [formData, setFormData] = useState({
@@ -32,12 +34,16 @@ export default function EnhancedLeadCaptureForm() {
     end_date: "",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-  })
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   // Array of loading messages to cycle through
   const loadingMessages = [
@@ -47,37 +53,37 @@ export default function EnhancedLeadCaptureForm() {
     "Comparing with similar experiences",
     "Creating personalized recommendations",
     "Finalizing your trip analysis",
-  ]
+  ];
 
   // Effect to cycle through loading messages
   useEffect(() => {
     if (isSubmitting) {
       const interval = setInterval(() => {
-        setLoadingStep((prev) => (prev + 1) % loadingMessages.length)
-        setLoadingText(loadingMessages[loadingStep])
-      }, 2000)
+        setLoadingStep((prev) => (prev + 1) % loadingMessages.length);
+        setLoadingText(loadingMessages[loadingStep]);
+      }, 2000);
 
-      return () => clearInterval(interval)
+      return () => clearInterval(interval);
     }
-  }, [isSubmitting, loadingStep])
+  }, [isSubmitting, loadingStep, loadingMessages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     // Simulate API call and processing time
-    await new Promise((resolve) => setTimeout(resolve, 6000))
+    await new Promise((resolve) => setTimeout(resolve, 6000));
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    setIsSubmitting(false);
+    setIsSubmitted(true);
 
     // Simulate saving data and redirect after a brief delay
     setTimeout(() => {
       // In a real app, you would save the data to a database here
       // and get the actual ID from the database
-      router.push(`/reviews/${formData.review_id}`)
-    }, 2000)
-  }
+      router.push(`/reviews/${formData.review_id}`);
+    }, 2000);
+  };
 
   if (isSubmitted) {
     return (
@@ -90,22 +96,29 @@ export default function EnhancedLeadCaptureForm() {
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
         <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
-          We've received your trip experience. Your review ID is{" "}
+          {`We've received your trip experience. Your review ID is `}
           <span className="font-semibold">{formData.review_id}</span>.
         </p>
         <div className="w-full max-w-md p-6 bg-muted rounded-lg mb-6">
-          <p className="text-center mb-4">Redirecting you to your personalized insights page...</p>
+          <p className="text-center mb-4">
+            Redirecting you to your personalized insights page...
+          </p>
           <div className="flex justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (isSubmitting) {
@@ -123,7 +136,7 @@ export default function EnhancedLeadCaptureForm() {
           Our AI is working on your submission. This will just take a moment...
         </p>
       </div>
-    )
+    );
   }
 
   // Form JSX remains the same as before
@@ -229,8 +242,14 @@ export default function EnhancedLeadCaptureForm() {
               <button
                 key={star}
                 type="button"
-                className={`text-2xl ${Number.parseInt(formData.rating as any) >= star ? "text-yellow-500" : "text-gray-300"}`}
-                onClick={() => setFormData((prev) => ({ ...prev, rating: star }))}
+                className={`text-2xl ${
+                  Number.parseInt(formData.rating.toString()) >= star
+                    ? "text-yellow-500"
+                    : "text-gray-300"
+                }`}
+                onClick={() =>
+                  setFormData((prev) => ({ ...prev, rating: star }))
+                }
               >
                 ★
               </button>
@@ -280,7 +299,14 @@ export default function EnhancedLeadCaptureForm() {
 
         <div className="space-y-2">
           <Label htmlFor="end_date">End Date</Label>
-          <Input id="end_date" name="end_date" type="date" required value={formData.end_date} onChange={handleChange} />
+          <Input
+            id="end_date"
+            name="end_date"
+            type="date"
+            required
+            value={formData.end_date}
+            onChange={handleChange}
+          />
         </div>
       </div>
 
@@ -302,8 +328,9 @@ export default function EnhancedLeadCaptureForm() {
       </Button>
 
       <p className="text-xs text-center text-muted-foreground">
-        By submitting this form, you agree to our Terms of Service and Privacy Policy.
+        By submitting this form, you agree to our Terms of Service and Privacy
+        Policy.
       </p>
     </form>
-  )
+  );
 }
