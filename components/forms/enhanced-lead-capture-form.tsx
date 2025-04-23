@@ -45,18 +45,17 @@ export default function EnhancedLeadCaptureForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Array of loading messages to cycle through
-  const loadingMessages = [
-    "Analyzing sentiment in your feedback",
-    "Identifying key themes in your experience",
-    "Generating actionable insights",
-    "Comparing with similar experiences",
-    "Creating personalized recommendations",
-    "Finalizing your trip analysis",
-  ];
-
   // Effect to cycle through loading messages
   useEffect(() => {
+    const loadingMessages = [
+      "Analyzing sentiment in your feedback",
+      "Identifying key themes in your experience",
+      "Generating actionable insights",
+      "Comparing with similar experiences",
+      "Creating personalized recommendations",
+      "Finalizing your trip analysis",
+    ];
+
     if (isSubmitting) {
       const interval = setInterval(() => {
         setLoadingStep((prev) => (prev + 1) % loadingMessages.length);
@@ -65,7 +64,7 @@ export default function EnhancedLeadCaptureForm() {
 
       return () => clearInterval(interval);
     }
-  }, [isSubmitting, loadingStep, loadingMessages]);
+  }, [isSubmitting, loadingStep]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
