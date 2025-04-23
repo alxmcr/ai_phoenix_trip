@@ -1,5 +1,6 @@
 "use client";
 
+import { ReviewData } from "@/app/types/db/review";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,7 @@ export default function EnhancedLeadCaptureForm() {
   const [loadingStep, setLoadingStep] = useState(0);
 
   // Update the form state to include all fields
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<ReviewData>>({
     email: "",
     age_group: "",
     trip_type: "",
@@ -236,7 +237,7 @@ export default function EnhancedLeadCaptureForm() {
                 key={star}
                 type="button"
                 className={`text-2xl ${
-                  Number.parseInt(formData.rating.toString()) >= star
+                  Number.parseInt(formData.rating?.toString() ?? "1") >= star
                     ? "text-yellow-500"
                     : "text-gray-300"
                 }`}
