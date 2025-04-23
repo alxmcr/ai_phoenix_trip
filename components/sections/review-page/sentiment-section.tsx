@@ -51,7 +51,7 @@ export function Sentiment({ sentiment }: Props) {
           <CardContent className="flex flex-col items-center pt-6">
             {getEmotionIcon(sentiment)}
             <h3 className="mt-4 text-2xl font-bold">
-              {sentiment.emotion_tone}
+              {sentiment.emotion_tone.toUpperCase()}
             </h3>
             <div
               className={`mt-2 text-3xl font-bold ${getScoreColor(sentiment)}`}

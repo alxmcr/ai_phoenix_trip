@@ -21,7 +21,7 @@ interface HeroSectionProps {
 export function Hero({ review }: HeroSectionProps) {
   const shareOnTwitter = (id: string) => {
     const url = `${window.location.origin}/reviews/${id}`;
-    const text = `Check out this review on Acme AI!`;
+    const text = `Check out this review on Phoenix Trip AI!`;
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(
         text
@@ -40,7 +40,7 @@ export function Hero({ review }: HeroSectionProps) {
 
   const shareOnWhatsApp = (id: string) => {
     const url = `${window.location.origin}/reviews/${id}`;
-    const text = `Check out this review on Acme AI!`;
+    const text = `Check out this review on Phoenix Trip AI!`;
     window.open(
       `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`,
       "_blank"
