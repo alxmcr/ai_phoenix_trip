@@ -6,22 +6,18 @@
 // Enum for OpenAI models:
 // Cost-optimized models, and structured outputs supported
 // Smaller, faster models that cost less to run.
-export enum OpenAIModelsCostOptimized {
-  GPT_4_O_MINI = "gpt-4o-mini",
-  GPT_3_5_TURBO = "gpt-3.5-turbo",
-  GPT_4_1_NANO = "gpt-4.1-nano-2025-04-14",
-}
+// - gpt-4o-mini
+// - gpt-3.5-turbo
+// - gpt-4.1-nano-2025-04-14
 
 // Enum for OpenAI models:
 // Older, but greater quality models
 // Smaller, faster models that cost less to run.
-export enum OpenAIModelsOlder {
+// - gpt-4o
+
+export enum OpenAIModels {
+  GPT_4_O_MINI = "gpt-4o-mini",
+  GPT_3_5_TURBO = "gpt-3.5-turbo",
+  GPT_4_1_NANO = "gpt-4.1-nano-2025-04-14",
   GPT_4_O = "gpt-4o",
 }
-
-// Enum for OpenAI models:
-// All models
-export const OpenAIModelsAll = {
-  ...OpenAIModelsCostOptimized,
-  ...OpenAIModelsOlder,
-};

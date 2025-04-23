@@ -1,4 +1,4 @@
-import { ReviewAIResponse } from "@/app/types/ai/review-ai-response";
+import { ResponseReviewGet } from "@/app/types/api/response-review";
 import Footer from "@/components/sections/footer";
 import { Hero } from "@/components/sections/review-page/hero";
 import { InsightsTabs } from "@/components/sections/review-page/insights-tabs";
@@ -30,7 +30,7 @@ export default async function ReviewPage({
   });
 
   // JSON response
-  const reviewAnalyzed = (await res.json()) as ReviewAIResponse;
+  const reviewAnalyzed = (await res.json()) as ResponseReviewGet;
 
   return (
     <main className="flex flex-col min-h-screen items-center">
