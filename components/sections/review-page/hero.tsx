@@ -47,6 +47,11 @@ export function Hero({ review }: HeroSectionProps) {
     );
   };
 
+  // Check if the review is valid
+  if (!review) {
+    return <div>Review not found</div>;
+  }
+
   return (
     <section className="mb-8 px-4 md:px-0 container">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">

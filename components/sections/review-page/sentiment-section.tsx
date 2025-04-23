@@ -16,6 +16,10 @@ interface Props {
 
 export function Sentiment({ sentiment }: Props) {
   const getEmotionIcon = (sentiment: SentimentData) => {
+    if (!sentiment) {
+      return <div>No sentiment data available</div>;
+    }
+
     switch (sentiment.label) {
       case "Positive":
         return <Smile className="h-16 w-16 text-emerald-500" />;
@@ -23,8 +27,15 @@ export function Sentiment({ sentiment }: Props) {
         return <Meh className="h-16 w-16 text-blue-500" />;
       case "Negative":
         return <Frown className="h-16 w-16 text-rose-500" />;
+      default:
+        return <div>No sentiment data available</div>;
     }
   };
+
+  // Check if the sentiment is valid
+  if (!sentiment) {
+    return <div>No sentiment data available</div>;
+  }
 
   return (
     <section className="mb-8 px-4 md:px-0 container">
