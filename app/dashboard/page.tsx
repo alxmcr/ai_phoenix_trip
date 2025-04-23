@@ -1,5 +1,6 @@
 import ActionableInsights from "@/components/sections/dashboard-page/actionables-section";
 import MetricsSection from "@/components/sections/dashboard-page/metrics-section";
+import ReviewsPaginatedSection from "@/components/sections/dashboard-page/recent-reviews-paginated-section";
 import TopRecommendations from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { Suspense } from "react";
@@ -79,6 +80,10 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 container py-4">
           <ActionableInsights />
           <TopRecommendations />
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 container py-4">
+          <ReviewsPaginatedSection />
         </div>
       </Suspense>
     </main>
