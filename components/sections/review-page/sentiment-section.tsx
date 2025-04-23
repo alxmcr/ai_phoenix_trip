@@ -16,15 +16,26 @@ interface Props {
 
 export function Sentiment({ sentiment }: Props) {
   const getEmotionIcon = (sentiment: SentimentData) => {
-    switch (sentiment.label) {
-      case "Positive":
+    if (!sentiment) {
+      return <div>No sentiment data available</div>;
+    }
+
+    switch (sentiment.label.toLowerCase()) {
+      case "positive":
         return <Smile className="h-16 w-16 text-emerald-500" />;
-      case "Neutral":
+      case "neutral":
         return <Meh className="h-16 w-16 text-blue-500" />;
-      case "Negative":
+      case "negative":
         return <Frown className="h-16 w-16 text-rose-500" />;
+      default:
+        return <div>No sentiment data available</div>;
     }
   };
+
+  // Check if the sentiment is valid
+  if (!sentiment) {
+    return <div>No sentiment data available</div>;
+  }
 
   return (
     <section className="mb-8 px-4 md:px-0 container">
@@ -40,7 +51,7 @@ export function Sentiment({ sentiment }: Props) {
           <CardContent className="flex flex-col items-center pt-6">
             {getEmotionIcon(sentiment)}
             <h3 className="mt-4 text-2xl font-bold">
-              {sentiment.emotion_tone}
+              {sentiment.emotion_tone.toUpperCase()}
             </h3>
             <div
               className={`mt-2 text-3xl font-bold ${getScoreColor(sentiment)}`}
@@ -64,9 +75,9 @@ export function Sentiment({ sentiment }: Props) {
             <div className="flex flex-wrap gap-2 mb-4">
               <Badge
                 key={sentiment.label}
-                className={getLabelColor(sentiment.label)}
+                className={getLabelColor(sentiment.label.toLowerCase())}
               >
-                {sentiment.label}
+                {sentiment.label.toLocaleUpperCase()}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">{sentiment.summary}</p>

@@ -1,5 +1,5 @@
+import EnhancedLeadCaptureForm from "@/components/forms/enhanced-lead-capture-form";
 import { Card, CardContent } from "@/components/ui/card";
-import LeadCaptureForm from "@/components/forms/lead-capture-form";
 
 export default function ShareTravelExperience() {
   return (
@@ -20,7 +20,7 @@ export default function ShareTravelExperience() {
 
           <Card>
             <CardContent className="pt-6">
-              <LeadCaptureForm />
+              <EnhancedLeadCaptureForm />
             </CardContent>
           </Card>
         </div>

@@ -1,18 +1,24 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function LeadCaptureForm() {
+export default function EnhancedLeadCaptureForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  // Update the form state to include all the new fields
+  const [loadingText, setLoadingText] = useState(
+    "Analyzing your trip experience"
+  );
+  const [loadingStep, setLoadingStep] = useState(0);
+
+  // Update the form state to include all fields
   const [formData, setFormData] = useState({
     review_id: `REV-${Math.floor(Math.random() * 10000)}`,
     email: "",
@@ -20,7 +26,7 @@ export default function LeadCaptureForm() {
     trip_type: "",
     description: "",
     transport_mode: "",
-    rating: 1,
+    rating: 5,
     company_name: "",
     origin: "",
     destination: "",
@@ -39,73 +45,100 @@ export default function LeadCaptureForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Effect to cycle through loading messages
+  useEffect(() => {
+    const loadingMessages = [
+      "Analyzing sentiment in your feedback",
+      "Identifying key themes in your experience",
+      "Generating actionable insights",
+      "Comparing with similar experiences",
+      "Creating personalized recommendations",
+      "Finalizing your trip analysis",
+    ];
+
+    if (isSubmitting) {
+      const interval = setInterval(() => {
+        setLoadingStep((prev) => (prev + 1) % loadingMessages.length);
+        setLoadingText(loadingMessages[loadingStep]);
+      }, 2000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isSubmitting, loadingStep]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Simulate API call and processing time
+    await new Promise((resolve) => setTimeout(resolve, 6000));
 
     setIsSubmitting(false);
     setIsSubmitted(true);
+
+    // Simulate saving data and redirect after a brief delay
+    setTimeout(() => {
+      // In a real app, you would save the data to a database here
+      // and get the actual ID from the database
+      router.push(`/reviews/${formData.review_id}`);
+    }, 2000);
   };
 
   if (isSubmitted) {
     return (
       <div className="flex flex-col items-center text-center py-8">
-        <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center mb-4">
-          <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-500" />
+        <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center mb-6">
+          <svg
+            className="h-10 w-10 text-green-600 dark:text-green-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
         </div>
         <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
-          {`We've received your trip experience. Our AI is analyzing it now, and
-          we'll send the insights to your email shortly.`}
+          {`We've received your trip experience. Your review ID is `}
+          <span className="font-semibold">{formData.review_id}</span>.
         </p>
-        <div className="w-full max-w-md p-6 bg-muted rounded-lg">
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-medium mb-1">Sentiment Analysis</h4>
-              <div className="h-4 bg-primary/20 rounded animate-pulse"></div>
-            </div>
-            <div>
-              <h4 className="font-medium mb-1">Actionable Insights</h4>
-              <div className="h-4 bg-primary/20 rounded animate-pulse"></div>
-            </div>
-            <div>
-              <h4 className="font-medium mb-1">Recommendations</h4>
-              <div className="h-4 bg-primary/20 rounded animate-pulse"></div>
-            </div>
+        <div className="w-full max-w-md p-6 bg-muted rounded-lg mb-6">
+          <p className="text-center mb-4">
+            Redirecting you to your personalized insights page...
+          </p>
+          <div className="flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         </div>
-        <Button
-          className="mt-8"
-          onClick={() => {
-            setIsSubmitted(false);
-            setFormData({
-              review_id: `REV-${Math.floor(Math.random() * 10000)}`,
-              email: "",
-              age_group: "",
-              trip_type: "",
-              description: "",
-              transport_mode: "",
-              rating: 5,
-              company_name: "",
-              origin: "",
-              destination: "",
-              start_date: "",
-              end_date: "",
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            });
-          }}
-        >
-          Submit Another Experience
-        </Button>
       </div>
     );
   }
 
-  // Replace the form JSX with this updated version:
+  if (isSubmitting) {
+    return (
+      <div className="flex flex-col items-center text-center py-12">
+        <div className="relative w-24 h-24 mb-8">
+          <div className="absolute inset-0 rounded-full border-4 border-primary/30"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          </div>
+        </div>
+        <h3 className="text-xl font-semibold mb-2">{loadingText}</h3>
+        <p className="text-muted-foreground max-w-md">
+          Our AI is working on your submission. This will just take a moment...
+        </p>
+      </div>
+    );
+  }
+
+  // Form JSX remains the same as before
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <input type="hidden" name="review_id" value={formData.review_id} />
@@ -259,7 +292,6 @@ export default function LeadCaptureForm() {
             type="date"
             required
             value={formData.start_date}
-            max={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
           />
         </div>
@@ -272,7 +304,6 @@ export default function LeadCaptureForm() {
             type="date"
             required
             value={formData.end_date}
-            max={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
           />
         </div>
@@ -291,20 +322,8 @@ export default function LeadCaptureForm() {
         />
       </div>
 
-      <Button
-        type="submit"
-        className="w-full"
-        size="lg"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Analyzing...
-          </>
-        ) : (
-          "Submit Trip Experience"
-        )}
+      <Button type="submit" className="w-full" size="lg">
+        Submit Trip Experience
       </Button>
 
       <p className="text-xs text-center text-muted-foreground">

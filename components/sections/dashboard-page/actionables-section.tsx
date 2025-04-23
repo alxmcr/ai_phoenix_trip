@@ -60,7 +60,7 @@ export default async function ActionableInsights() {
             <div key={insight.actionable_id} className="rounded-lg border p-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold">{insight.title}</h3>
-                {getPriorityBadge(insight.priority)}
+                {getPriorityBadge(insight.priority.toLocaleUpperCase())}
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 {insight.description}
