@@ -1,4 +1,4 @@
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 
 export class AppError extends Error {
   constructor(

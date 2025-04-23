@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     description:
       "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
     url: "https://ai-phoenix-trip.vercel.app",
-    siteName: "Phoenix Trip",
+    siteName: "Phoenix Trip - AI-powered insights from passenger trip experiences",
     images: [
       {
         url: "https://ai-phoenix-trip.vercel.app/og.png", // Must be an absolute URL
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
         url: "https://ai-phoenix-trip.vercel.app/og-alt.png", // Must be an absolute URL
         width: 1800,
         height: 1600,
-        alt: "My custom alt",
+        alt: "Phoenix Trip",
       },
     ],
     videos: [
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     ],
     audio: [
       {
-        url: "https://nextjs.org/audio.mp3", // Must be an absolute URL
+        url: "https://ai-phoenix-trip.vercel.app/audio.mp3", // Must be an absolute URL
       },
     ],
     locale: "en_US",

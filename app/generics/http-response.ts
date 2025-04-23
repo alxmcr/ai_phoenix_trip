@@ -1,4 +1,4 @@
-import { HTTPResponseCode } from "../enums/http-response-code";
+import { HTTPResponseCode } from "../enums/api/http-response-code";
 
 
 export interface HTTPResponse<T> {

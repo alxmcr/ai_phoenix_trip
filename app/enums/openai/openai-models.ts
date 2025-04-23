@@ -18,3 +18,10 @@ export enum OpenAIModelsCostOptimized {
 export enum OpenAIModelsOlder {
   GPT_4_O = "gpt-4o",
 }
+
+// Enum for OpenAI models:
+// All models
+export const OpenAIModelsAll = {
+  ...OpenAIModelsCostOptimized,
+  ...OpenAIModelsOlder,
+};

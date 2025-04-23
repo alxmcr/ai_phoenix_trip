@@ -1,7 +1,7 @@
 import { RecommendationDB } from "@/app/classes/db/recommendation-db";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 
 // Helper database
 const dbRecommendation = new RecommendationDB();

@@ -1,7 +1,7 @@
 // POST request: create an Sentiment
 
 import { SentimentDB } from "@/app/classes/db/sentiment-db";
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 
 const dbSentiment = new SentimentDB();
 

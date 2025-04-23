@@ -2,7 +2,7 @@ import { ActionableDB } from "@/app/classes/db/actionable-db";
 import { RecommendationDB } from "@/app/classes/db/recommendation-db";
 import { ReviewDB } from "@/app/classes/db/review-db";
 import { SentimentDB } from "@/app/classes/db/sentiment-db";
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 import { ReviewAIResponse } from "@/app/types/ai/review-ai-response";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";

@@ -1,4 +1,4 @@
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 import { AppError } from "./error-app";
 
 export class InvalidFilterError extends AppError {

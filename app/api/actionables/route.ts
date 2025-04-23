@@ -1,7 +1,7 @@
 // POST request: create an actionable
 
 import { ActionableDB } from "@/app/classes/db/actionable-db";
-import { HTTPResponseCode } from "@/app/enums/http-response-code";
+import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 
 const dbActionable = new ActionableDB();
 
