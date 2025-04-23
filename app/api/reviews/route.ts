@@ -5,6 +5,7 @@ import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 import { HTTPResponse } from "@/app/generics/http-response";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ResponseReviewInsert } from "@/app/types/api/response-review";
+import { ReviewData } from "@/app/types/db/review";
 import { NextRequest } from "next/server";
 import { validate as validateUUID } from "uuid";
 
@@ -76,10 +77,25 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Function to process the request.json to the ReviewData type
+// - Convert date strings '2025-08-08' to Date objects
+async function processRequestJson(request: Request): Promise<ReviewData> {
+  try {
+    const reviewReq = await request.json();
+
+    // Convert date strings to Date objects
+    reviewReq.start_date = new Date(reviewReq.start_date);
+    reviewReq.end_date = new Date(reviewReq.end_date);
+
+    return reviewReq;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function POST(request: Request) {
   try {
-    // Parse the request body
-    const review = await request.json();
+    const review = await processRequestJson(request);
 
     const reviewAnalysis = new ReviewAnalysis();
     const responseHandler = new ReviewResponseHandler();
