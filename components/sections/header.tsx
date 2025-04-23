@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import Logo32x32PhoenixTrip from "../logos/Logo32x32PhoenixTrip";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +18,8 @@ export default function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="px-2 text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text">
+            <Logo32x32PhoenixTrip />
+            <span className="px-2 text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-400 text-transparent bg-clip-text">
               Phoenix Trip
             </span>
           </Link>
