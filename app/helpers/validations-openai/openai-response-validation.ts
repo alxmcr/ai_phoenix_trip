@@ -79,6 +79,7 @@ export function validateFieldFormats(
 export function validateOpenAIResponse(
   response: Partial<ResponseOpenAITravelReviewAnalysis>
 ): void {
+  console.log("🚀 ~ response:", response)
   try {
     // Validate the response using Zod schema
     openAIResponseSchema.parse(response);
