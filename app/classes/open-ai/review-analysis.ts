@@ -4,6 +4,7 @@ import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON } from "@/app/helpers/ai/system-definition-json";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ReviewData } from "@/app/types/db/review";
+import { APIError } from "openai";
 import { OpenAIResponses } from "./openai-response";
 
 export class ReviewAnalysis {
@@ -27,7 +28,6 @@ export class ReviewAnalysis {
     try {
       // Build the prompt for OpenAI analysis
       const prompt = buildPromptReview(review);
-      console.log("🚀 ~ ReviewAnalysis ~ prompt:", prompt)
 
       // Get OpenAI analysis
       const analysis = await this.openAIResponses.createResponse(
@@ -37,13 +37,14 @@ export class ReviewAnalysis {
 
       return analysis;
     } catch (error) {
-      console.log("\n\n--------------------------------");
-      console.log("ReviewAnalysis ~ error:");
-      console.log( error);
-      console.log("\n\n--------------------------------");
+      if (error instanceof APIError) {
+        throw new Error("API Error: " + error.message);
+      }
 
       throw new Error(
-        `Failed to analyze review: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to analyze review: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }

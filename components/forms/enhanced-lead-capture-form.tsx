@@ -81,7 +81,6 @@ export default function EnhancedLeadCaptureForm() {
       }
 
       const review = await reviewResponse.json();
-      console.log("🚀 ~ handleSubmit ~ review:", review);
 
       if (!review.review_id) {
         throw new Error("Failed to submit review");
