@@ -28,11 +28,11 @@ export function InsightsTabs({
 }: InsightsTabsProps) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "High":
+      case "high":
         return "bg-rose-100 text-rose-800";
-      case "Medium":
+      case "medium":
         return "bg-amber-100 text-amber-800";
-      case "Low":
+      case "low":
         return "bg-emerald-100 text-emerald-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -41,22 +41,22 @@ export function InsightsTabs({
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case "High":
+      case "high":
         return <AlertTriangle className="h-5 w-5 text-rose-500" />;
-      case "Medium":
+      case "medium":
         return <Clock className="h-5 w-5 text-amber-500" />;
-      case "Low":
+      case "low":
         return <CheckCircle className="h-5 w-5 text-emerald-500" />;
     }
   };
 
   const getImpactIcon = (impact: string) => {
     switch (impact) {
-      case "High":
+      case "high":
         return <Zap className="h-5 w-5 text-rose-500" />;
-      case "Medium":
+      case "medium":
         return <Target className="h-5 w-5 text-amber-500" />;
-      case "Low":
+      case "low":
         return <BarChart className="h-5 w-5 text-emerald-500" />;
     }
   };
@@ -90,7 +90,11 @@ export function InsightsTabs({
                           <h3 className="text-lg font-semibold">
                             {item.title}
                           </h3>
-                          <Badge className={getPriorityColor(item.priority)}>
+                          <Badge
+                            className={getPriorityColor(
+                              item.priority.toLocaleLowerCase()
+                            )}
+                          >
                             Priority: {item.priority.toLocaleUpperCase()}
                           </Badge>
                         </div>
@@ -142,8 +146,8 @@ export function InsightsTabs({
                             {item.title}
                           </h3>
                           <div className="flex gap-2">
-                            <Badge className={getPriorityColor(item.impact)}>
-                               Impact: {item.impact.toLocaleUpperCase()}
+                            <Badge className={getPriorityColor(item.impact.toLocaleLowerCase())}>
+                              Impact: {item.impact.toLocaleUpperCase()}
                             </Badge>
                             {item.data_driven && (
                               <Badge
