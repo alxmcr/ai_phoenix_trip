@@ -2,8 +2,10 @@
 
 import React from "react";
 
-import { useState } from "react";
-import Link from "next/link";
+import { ReviewDB } from "@/app/classes/db/review-db";
+import { ReviewData } from "@/app/types/db/review";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,14 +16,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -29,7 +23,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ArrowRight,
   Calendar,
@@ -38,8 +38,7 @@ import {
   Star,
   Truck,
 } from "lucide-react";
-import { ReviewData } from "@/app/types/db/review";
-import { ReviewDB } from "@/app/classes/db/review-db";
+import Link from "next/link";
 
 // Helper data
 const dbReview = new ReviewDB();
