@@ -51,6 +51,14 @@ export function buildPromptReview(review: ReviewData) {
     throw new Error("Invalid end date");
   }
 
+  // Convert string to date
+  const startDate = new Date(review.start_date);
+  const endDate = new Date(review.end_date);
+
+  // Date format: YYYY-MM-DD
+  const startDateString = startDate.toISOString().split("T")[0];
+  const endDateString = endDate.toISOString().split("T")[0];
+
   return `
       Analyze the following travel review and provide insights:
 
@@ -60,7 +68,7 @@ export function buildPromptReview(review: ReviewData) {
       - Company: ${review.company_name}
       - Rating: ${review.rating}/5
       - Route: From ${review.origin} to ${review.destination}
-      - Travel dates: ${review.start_date} to ${review.end_date}.
+      - Travel dates: ${startDateString} to ${endDateString}.
       - Review: "${review.description}"
   `;
 }
