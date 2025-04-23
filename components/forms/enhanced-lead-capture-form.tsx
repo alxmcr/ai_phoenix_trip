@@ -11,8 +11,8 @@ import type React from "react";
 import { useEffect, useState } from "react";
 
 export default function EnhancedLeadCaptureForm() {
-  const review_id = `REV-${Math.floor(Math.random() * 10000)}`;
   const router = useRouter();
+  const [review_id, setReviewId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loadingText, setLoadingText] = useState(
@@ -69,18 +69,36 @@ export default function EnhancedLeadCaptureForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call and processing time
-    await new Promise((resolve) => setTimeout(resolve, 6000));
+    try {
+      // Simulate API call and processing time
+      const reviewResponse = await fetch("/api/reviews", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      if (!reviewResponse.ok) {
+        throw new Error("Failed to submit review");
+      }
 
-    // Simulate saving data and redirect after a brief delay
-    setTimeout(() => {
-      // In a real app, you would save the data to a database here
-      // and get the actual ID from the database
-      router.push(`/reviews/${review_id}`);
-    }, 2000);
+      const review = await reviewResponse.json();
+      console.log("🚀 ~ handleSubmit ~ review:", review);
+
+      if (!review.review_id) {
+        throw new Error("Failed to submit review");
+      }
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+
+      // Set the review id
+      setReviewId(review.review_id);
+
+      // Redirect to the review page
+      router.push(`/reviews/${review.review_id}`);
+    } catch (error) {
+      console.log("🚀 ~ handleSubmit ~ error:", error);
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {

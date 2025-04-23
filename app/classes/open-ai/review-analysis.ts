@@ -27,6 +27,7 @@ export class ReviewAnalysis {
     try {
       // Build the prompt for OpenAI analysis
       const prompt = buildPromptReview(review);
+      console.log("🚀 ~ ReviewAnalysis ~ prompt:", prompt)
 
       // Get OpenAI analysis
       const analysis = await this.openAIResponses.createResponse(
