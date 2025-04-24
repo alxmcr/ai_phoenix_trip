@@ -1,6 +1,5 @@
 import { OpenAIModels } from "@/app/enums/openai/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai/openai-temperatures";
-import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON } from "@/app/helpers/ai/system-definition-json";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ReviewData } from "@/app/types/db/review";
