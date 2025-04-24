@@ -1,5 +1,5 @@
-import { openai } from "@/app/config/ai/openai-client";
-import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/app/config/ai/openai-system-directives";
+import { openai } from "@/config/ai/openai-client";
+import { TRAVEL_ASSISTANT_REVIEW_ANALYZER } from "@/config/ai/openai-system-directives";
 import { OpenAIMessageRoles } from "@/app/enums/openai/openai-message-roles";
 import { OpenAIModels } from "@/app/enums/openai/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai/openai-temperatures";
