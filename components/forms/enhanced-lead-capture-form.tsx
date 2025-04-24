@@ -1,5 +1,6 @@
 "use client";
 
+import { FormSubmissionHandler } from "@/app/classes/forms/form-submission-handler";
 import { ReviewData } from "@/app/types/db/review";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function EnhancedLeadCaptureForm() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function EnhancedLeadCaptureForm() {
     "Analyzing your trip experience"
   );
   const [loadingStep, setLoadingStep] = useState(0);
+  const formSubmissionHandler = useMemo(() => new FormSubmissionHandler(), []);
 
   // Update the form state to include all fields
   const [formData, setFormData] = useState<Partial<ReviewData>>({
@@ -70,24 +72,12 @@ export default function EnhancedLeadCaptureForm() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call and processing time
-      const reviewResponse = await fetch("/api/reviews", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      });
-
-      const review = await reviewResponse.json();
-
-      setIsSubmitting(false);
+      const review_id = await formSubmissionHandler.handleFormSubmission(formData as ReviewData);
+      setReviewId(review_id);
       setIsSubmitted(true);
-
-      // Set the review id
-      setReviewId(review.review_id);
-
-      // Redirect to the review page
-      router.push(`/reviews/${review.review_id}`);
+      router.push(`/reviews/${review_id}`);
     } catch (error) {
-      console.log("🚀 ~ handleSubmit ~ error:", error);
+      console.error("Form submission error:", error);
       setIsSubmitting(false);
     }
   };
