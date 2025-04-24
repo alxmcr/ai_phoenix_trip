@@ -115,6 +115,7 @@ export async function POST(request: Request) {
     );
 
     console.log("\n\n POST 4 --------------------------------");
+    console.log("\n processedAnalysis: ", processedAnalysis);
 
     // Check if the review id is UUID valid
     if (!validateUUID(processedAnalysis.review_id)) {

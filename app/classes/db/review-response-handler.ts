@@ -19,38 +19,91 @@ export class ReviewResponseHandler {
     this.recommendationDb = new RecommendationDB();
   }
 
-  async handleInsertReview(review: ReviewData): Promise<string> {
+  private async insertReview(review: ReviewData): Promise<string> {
     try {
-      console.log("\n handleInsertReview 1 --------------------------------");
-      // Store the review
+      console.log("[ReviewResponseHandler] Inserting review...");
       const reviewCreated = await this.reviewDb.insert(review);
 
-      console.log("\n handleInsertReview 2 --------------------------------");
-
-      // Check if the review was created successfully
       if (!reviewCreated) {
         throw new Error("Failed to create review");
       }
 
-      console.log("\n handleInsertReview 3 --------------------------------");
-
-      // Get the review ID
       const reviewId = reviewCreated.review_id;
-
-      console.log("\n reviewId: ", reviewId);
-      console.log("\n handleInsertReview 4 --------------------------------");
-
-      // Check if the review ID is valid
       if (!reviewId) {
         throw new Error("Failed to get review ID");
       }
 
-      console.log("\n handleInsertReview 5 --------------------------------");
-
+      console.log(`[ReviewResponseHandler] Review inserted successfully with ID: ${reviewId}`);
       return reviewId;
     } catch (error) {
-      console.error("Error in handleInsertReview:", error);
-      throw error;
+      console.error("[ReviewResponseHandler] Error inserting review:", error);
+      throw new Error(`Failed to insert review: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+  }
+
+  private async insertSentiment(reviewId: string, sentiment: ResponseOpenAITravelReviewAnalysis['sentiment']) {
+    try {
+      console.log(`[ReviewResponseHandler] Inserting sentiment for review ${reviewId}...`);
+      const result = await this.sentimentDb.insert({
+        review_id: reviewId,
+        score: sentiment.score,
+        label: sentiment.label,
+        summary: sentiment.summary,
+        emotion_tone: sentiment.emotion_tone,
+      });
+      console.log(`[ReviewResponseHandler] Sentiment inserted successfully for review ${reviewId}`);
+      return result;
+    } catch (error) {
+      console.error(`[ReviewResponseHandler] Error inserting sentiment for review ${reviewId}:`, error);
+      throw new Error(`Failed to insert sentiment: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+  }
+
+  private async insertActionables(reviewId: string, actionables: ResponseOpenAITravelReviewAnalysis['actionables']) {
+    try {
+      console.log(`[ReviewResponseHandler] Inserting actionables for review ${reviewId}...`);
+      const results = await Promise.all(
+        actionables.map((actionable) =>
+          this.actionableDb.insert({
+            review_id: reviewId,
+            title: actionable.title,
+            description: actionable.description,
+            priority: actionable.priority,
+            department: actionable.department,
+            category: actionable.category,
+            source_aspect: actionable.source_aspect,
+          })
+        )
+      );
+      console.log(`[ReviewResponseHandler] ${results.length} actionables inserted successfully for review ${reviewId}`);
+      return results;
+    } catch (error) {
+      console.error(`[ReviewResponseHandler] Error inserting actionables for review ${reviewId}:`, error);
+      throw new Error(`Failed to insert actionables: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+  }
+
+  private async insertRecommendations(reviewId: string, recommendations: ResponseOpenAITravelReviewAnalysis['recommendations']) {
+    try {
+      console.log(`[ReviewResponseHandler] Inserting recommendations for review ${reviewId}...`);
+      const results = await Promise.all(
+        recommendations.map((recommendation) =>
+          this.recommendationDb.insert({
+            review_id: reviewId,
+            title: recommendation.title,
+            description: recommendation.description,
+            impact: recommendation.impact,
+            target_area: recommendation.target_area,
+            effort_level: recommendation.effort_level,
+            data_driven: recommendation.data_driven,
+          })
+        )
+      );
+      console.log(`[ReviewResponseHandler] ${results.length} recommendations inserted successfully for review ${reviewId}`);
+      return results;
+    } catch (error) {
+      console.error(`[ReviewResponseHandler] Error inserting recommendations for review ${reviewId}:`, error);
+      throw new Error(`Failed to insert recommendations: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -59,63 +112,19 @@ export class ReviewResponseHandler {
     analysis: ResponseOpenAITravelReviewAnalysis
   ): Promise<ResponseReviewInsert> {
     try {
-      console.log("\n handleResponse 1 --------------------------------");
+      console.log("[ReviewResponseHandler] Starting review response handling...");
 
-      // Get the review ID, from the new review
-      const reviewId = await this.handleInsertReview(review);
+      // Step 1: Insert review and get reviewId
+      const reviewId = await this.insertReview(review);
 
-      console.log("\n handleResponse 2 --------------------------------");
-
-      // Check if the review ID is valid
-      if (!reviewId) {
-        throw new Error("Failed to get review ID");
-      }
-
-      console.log("\n handleResponse 3 --------------------------------");
-
-      // Execute all database operations in parallel
+      // Step 2: Execute all database operations in parallel with timeout
       const [sentiment, actionables, recommendations] = await Promise.all([
-        // Store the sentiment analysis
-        this.sentimentDb.insert({
-          review_id: reviewId,
-          score: analysis.sentiment.score,
-          label: analysis.sentiment.label,
-          summary: analysis.sentiment.summary,
-          emotion_tone: analysis.sentiment.emotion_tone,
-        }),
-        // Store the actionables
-        Promise.all(
-          analysis.actionables.map((actionable) =>
-            this.actionableDb.insert({
-              review_id: reviewId,
-              title: actionable.title,
-              description: actionable.description,
-              priority: actionable.priority,
-              department: actionable.department,
-              category: actionable.category,
-              source_aspect: actionable.source_aspect,
-            })
-          )
-        ),
-        // Store the recommendations
-        Promise.all(
-          analysis.recommendations.map((recommendation) =>
-            this.recommendationDb.insert({
-              review_id: reviewId,
-              title: recommendation.title,
-              description: recommendation.description,
-              impact: recommendation.impact,
-              target_area: recommendation.target_area,
-              effort_level: recommendation.effort_level,
-              data_driven: recommendation.data_driven,
-            })
-          )
-        ),
+        this.insertSentiment(reviewId, analysis.sentiment),
+        this.insertActionables(reviewId, analysis.actionables),
+        this.insertRecommendations(reviewId, analysis.recommendations)
       ]);
 
-      console.log("\n handleResponse 4 --------------------------------");
-
-      // Build the response
+      // Step 3: Build and return response
       const response: ResponseReviewInsert = {
         review_id: reviewId,
         analysis: {
@@ -130,13 +139,10 @@ export class ReviewResponseHandler {
         },
       };
 
-      console.log("\n handleResponse 5 --------------------------------");
-
-      console.log("\n response: ", response);
-
+      console.log("[ReviewResponseHandler] Review response handling completed successfully");
       return response;
     } catch (error) {
-      console.error("Error in handleResponse:", error);
+      console.error("[ReviewResponseHandler] Error in handleResponse:", error);
       throw new Error(
         `Failed to handle review response: ${
           error instanceof Error ? error.message : "Unknown error"
