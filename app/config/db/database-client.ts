@@ -16,6 +16,7 @@ if (!connectionString) {
 const sql = postgres(connectionString, {
   connection: {
     application_name: 'phoenix-trip',
+    statement_timeout: 10000, // 10 seconds in milliseconds
   },
 });
 
