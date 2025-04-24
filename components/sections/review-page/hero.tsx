@@ -65,7 +65,7 @@ export function Hero({ review }: HeroSectionProps) {
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9"
+            className="h-9 w-9 cursor-pointer"
             onClick={() => shareOnTwitter(review.review_id)}
             title="Share on X/Twitter"
           >
@@ -75,7 +75,7 @@ export function Hero({ review }: HeroSectionProps) {
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9"
+            className="h-9 w-9 cursor-pointer"
             onClick={() => shareOnFacebook(review.review_id)}
             title="Share on Facebook"
           >
@@ -85,7 +85,7 @@ export function Hero({ review }: HeroSectionProps) {
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9"
+            className="h-9 w-9 cursor-pointer"
             onClick={() => shareOnWhatsApp(review.review_id)}
             title="Share on WhatsApp"
           >
@@ -114,7 +114,7 @@ export function Hero({ review }: HeroSectionProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="h-8 w-8 cursor-pointer"
                   onClick={() => copyToClipboard(review.review_id)}
                   title="Copy Review ID"
                 >

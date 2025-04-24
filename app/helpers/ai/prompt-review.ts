@@ -41,26 +41,34 @@ export function buildPromptReview(review: ReviewData) {
     throw new Error("Invalid review text");
   }
 
-  // check if start_date is valid
-  if (review.start_date) {
+  // check if start_date is null or undefined
+  if (!review.start_date) {
     throw new Error("Invalid start date");
   }
 
-  // check if end_date is valid
-  if (review.end_date) {
+  // check if end_date is null or undefined
+  if (!review.end_date) {
     throw new Error("Invalid end date");
   }
+
+  // Convert string to date
+  const startDate = new Date(review.start_date);
+  const endDate = new Date(review.end_date);
+
+  // Date format: YYYY-MM-DD
+  const startDateString = startDate.toISOString().split("T")[0];
+  const endDateString = endDate.toISOString().split("T")[0];
 
   return `
       Analyze the following travel review and provide insights:
 
-      - Age Group: ${review.age_group}
-      - Trip Type: ${review.trip_type}
-      - Transport Mode: ${review.transport_mode}
-      - Company: ${review.company_name}
+      - Age Group: ${review.age_group}.
+      - Trip Type: ${review.trip_type}.
+      - Transport Mode: ${review.transport_mode}.
+      - Company: ${review.company_name}.
       - Rating: ${review.rating}/5
-      - Route: From ${review.origin} to ${review.destination}
-      - Travel dates: ${review.start_date} to ${review.end_date}.
-      - Review: "${review.description}"
+      - Route: From ${review.origin} to ${review.destination}.
+      - Travel dates: ${startDateString} to ${endDateString}.
+      - Review: ${review.description}.
   `;
 }

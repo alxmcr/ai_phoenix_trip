@@ -1,5 +1,6 @@
 "use client";
 
+import { ReviewData } from "@/app/types/db/review";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,8 +11,8 @@ import type React from "react";
 import { useEffect, useState } from "react";
 
 export default function EnhancedLeadCaptureForm() {
-  const review_id = `REV-${Math.floor(Math.random() * 10000)}`;
   const router = useRouter();
+  const [review_id, setReviewId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loadingText, setLoadingText] = useState(
@@ -20,7 +21,7 @@ export default function EnhancedLeadCaptureForm() {
   const [loadingStep, setLoadingStep] = useState(0);
 
   // Update the form state to include all fields
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<ReviewData>>({
     email: "",
     age_group: "",
     trip_type: "",
@@ -68,18 +69,27 @@ export default function EnhancedLeadCaptureForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call and processing time
-    await new Promise((resolve) => setTimeout(resolve, 6000));
+    try {
+      // Simulate API call and processing time
+      const reviewResponse = await fetch("/api/reviews", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      const review = await reviewResponse.json();
 
-    // Simulate saving data and redirect after a brief delay
-    setTimeout(() => {
-      // In a real app, you would save the data to a database here
-      // and get the actual ID from the database
-      router.push(`/reviews/${review_id}`);
-    }, 2000);
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+
+      // Set the review id
+      setReviewId(review.review_id);
+
+      // Redirect to the review page
+      router.push(`/reviews/${review.review_id}`);
+    } catch (error) {
+      console.log("🚀 ~ handleSubmit ~ error:", error);
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -236,7 +246,7 @@ export default function EnhancedLeadCaptureForm() {
                 key={star}
                 type="button"
                 className={`text-2xl ${
-                  Number.parseInt(formData.rating.toString()) >= star
+                  Number.parseInt(formData.rating?.toString() ?? "1") >= star
                     ? "text-yellow-500"
                     : "text-gray-300"
                 }`}

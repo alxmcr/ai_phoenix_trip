@@ -3,7 +3,7 @@ import { z } from "zod";
 // Sentiment schema
 export const sentimentSchema = z.object({
   score: z.number().min(-1).max(1),
-  label: z.enum(["positive", "negative", "neutral"]),
+  label: z.enum(["Positive", "Negative", "Neutral"]),
   summary: z.string().min(10),
   emotion_tone: z.string().min(3),
 });
@@ -12,7 +12,7 @@ export const sentimentSchema = z.object({
 export const actionableSchema = z.object({
   title: z.string().min(3),
   description: z.string().min(10),
-  priority: z.enum(["low", "medium", "high"]),
+  priority: z.enum(["Low", "Medium", "High"]),
   department: z.string().min(3),
   category: z.string().min(3),
   source_aspect: z.string().min(3),
@@ -22,9 +22,9 @@ export const actionableSchema = z.object({
 export const recommendationSchema = z.object({
   title: z.string().min(3),
   description: z.string().min(10),
-  impact: z.enum(["low", "medium", "high"]),
+  impact: z.enum(["Low", "Medium", "High"]),
   target_area: z.string().min(3),
-  effort_level: z.enum(["low", "medium", "high"]),
+  effort_level: z.enum(["Low", "Medium", "High"]),
   data_driven: z.boolean(),
 });
 

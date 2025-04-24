@@ -4,6 +4,7 @@ import { OpenAIModels } from "@/app/enums/openai/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai/openai-temperatures";
 import { validateOpenAIResponse } from "@/app/helpers/validations-openai/openai-response-validation";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
+import { APIError } from "openai";
 
 export interface ResponseOptions {
   model?: OpenAIModels;
@@ -132,9 +133,6 @@ export class OpenAIResponses {
         },
       });
 
-      // Print OpenAI response
-      console.log("🚀 ~ OpenAIResponses ~ response:", response);
-
       // Check if the response is valid JSON
       if (!response.output_text) {
         throw new Error("Invalid JSON response from OpenAI");
@@ -150,6 +148,10 @@ export class OpenAIResponses {
 
       return parsedResponse;
     } catch (error) {
+      if (error instanceof APIError) {
+        throw new Error("API Error: " + error.message);
+      }
+
       throw new Error(
         `Failed to create response: ${
           error instanceof Error ? error.message : "Unknown error"

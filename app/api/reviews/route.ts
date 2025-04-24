@@ -5,7 +5,9 @@ import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
 import { HTTPResponse } from "@/app/generics/http-response";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ResponseReviewInsert } from "@/app/types/api/response-review";
+import { ReviewData } from "@/app/types/db/review";
 import { NextRequest } from "next/server";
+import { APIError } from "openai";
 import { validate as validateUUID } from "uuid";
 
 const dbReview = new ReviewDB();
@@ -68,7 +70,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error);
+    console.log("🚀 ~ GET ~ error:", error)
     return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), {
       status: HTTPResponseCode.INTERNAL_SERVER_ERROR,
       headers: { "Content-Type": "application/json" },
@@ -76,10 +78,25 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Function to process the request.json to the ReviewData type
+// - Convert date strings '2025-08-08' to Date objects
+async function processRequestJson(request: Request): Promise<ReviewData> {
+  try {
+    const reviewReq = await request.json();
+
+    // Convert date strings to Date objects
+    reviewReq.start_date = new Date(reviewReq.start_date);
+    reviewReq.end_date = new Date(reviewReq.end_date);
+
+    return reviewReq;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function POST(request: Request) {
   try {
-    // Parse the request body
-    const review = await request.json();
+    const review = await processRequestJson(request);
 
     const reviewAnalysis = new ReviewAnalysis();
     const responseHandler = new ReviewResponseHandler();
@@ -112,9 +129,16 @@ export async function POST(request: Request) {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (err) {
-    if (err instanceof Error) {
-      return new Response(JSON.stringify({ error: err.message }), {
+  } catch (error) {
+    if (error instanceof APIError) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: error.status,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (error instanceof Error) {
+      return new Response(JSON.stringify({ error: error.message }), {
         status: HTTPResponseCode.BAD_REQUEST,
         headers: { "Content-Type": "application/json" },
       });
