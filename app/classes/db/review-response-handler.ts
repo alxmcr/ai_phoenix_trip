@@ -21,6 +21,7 @@ export class ReviewResponseHandler {
 
   private async insertReview(review: ReviewData): Promise<string> {
     try {
+      console.time("[ReviewResponseHandler] insertReview execution time");
       console.log("[ReviewResponseHandler] Inserting review...");
       const reviewCreated = await this.reviewDb.insert(review);
 
@@ -34,6 +35,7 @@ export class ReviewResponseHandler {
       }
 
       console.log(`[ReviewResponseHandler] Review inserted successfully with ID: ${reviewId}`);
+      console.timeEnd("[ReviewResponseHandler] insertReview execution time");
       return reviewId;
     } catch (error) {
       console.error("[ReviewResponseHandler] Error inserting review:", error);
@@ -43,6 +45,7 @@ export class ReviewResponseHandler {
 
   private async insertSentiment(reviewId: string, sentiment: ResponseOpenAITravelReviewAnalysis['sentiment']) {
     try {
+      console.time("[ReviewResponseHandler] insertSentiment execution time");
       console.log(`[ReviewResponseHandler] Inserting sentiment for review ${reviewId}...`);
       const result = await this.sentimentDb.insert({
         review_id: reviewId,
@@ -52,6 +55,7 @@ export class ReviewResponseHandler {
         emotion_tone: sentiment.emotion_tone,
       });
       console.log(`[ReviewResponseHandler] Sentiment inserted successfully for review ${reviewId}`);
+      console.timeEnd("[ReviewResponseHandler] insertSentiment execution time");
       return result;
     } catch (error) {
       console.error(`[ReviewResponseHandler] Error inserting sentiment for review ${reviewId}:`, error);
@@ -61,6 +65,7 @@ export class ReviewResponseHandler {
 
   private async insertActionables(reviewId: string, actionables: ResponseOpenAITravelReviewAnalysis['actionables']) {
     try {
+      console.time("[ReviewResponseHandler] insertActionables execution time");
       console.log(`[ReviewResponseHandler] Inserting actionables for review ${reviewId}...`);
       const results = await Promise.all(
         actionables.map((actionable) =>
@@ -76,6 +81,7 @@ export class ReviewResponseHandler {
         )
       );
       console.log(`[ReviewResponseHandler] ${results.length} actionables inserted successfully for review ${reviewId}`);
+      console.timeEnd("[ReviewResponseHandler] insertActionables execution time");
       return results;
     } catch (error) {
       console.error(`[ReviewResponseHandler] Error inserting actionables for review ${reviewId}:`, error);
@@ -85,6 +91,7 @@ export class ReviewResponseHandler {
 
   private async insertRecommendations(reviewId: string, recommendations: ResponseOpenAITravelReviewAnalysis['recommendations']) {
     try {
+      console.time("[ReviewResponseHandler] insertRecommendations execution time");
       console.log(`[ReviewResponseHandler] Inserting recommendations for review ${reviewId}...`);
       const results = await Promise.all(
         recommendations.map((recommendation) =>
@@ -100,6 +107,7 @@ export class ReviewResponseHandler {
         )
       );
       console.log(`[ReviewResponseHandler] ${results.length} recommendations inserted successfully for review ${reviewId}`);
+      console.timeEnd("[ReviewResponseHandler] insertRecommendations execution time");
       return results;
     } catch (error) {
       console.error(`[ReviewResponseHandler] Error inserting recommendations for review ${reviewId}:`, error);
