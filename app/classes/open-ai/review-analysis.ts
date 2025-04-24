@@ -16,6 +16,7 @@ export class ReviewAnalysis {
       model: OpenAIModels.GPT_4_O_MINI,
       temperature: OpenAITemperatures.BALANCED_CREATIVE,
       format: "json",
+      timeout: 8000, // 8 seconds (10 seconds is the max allowed in Vercel)
     });
 
     this.directiveSystem =
@@ -27,7 +28,7 @@ export class ReviewAnalysis {
   ): Promise<ResponseOpenAITravelReviewAnalysis> {
     try {
       console.log("-- analyzeReview --------------------------------");
-      console.log("-- analyzeReview 1 ---")
+      console.log("-- analyzeReview 1 ---");
       // Build the prompt for OpenAI analysis
       const prompt = buildPromptReview(review);
 

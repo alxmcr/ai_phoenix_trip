@@ -55,6 +55,8 @@ export class OpenAIResponses {
 
     try {
       console.log("\n createResponse 4 --------------------------------");
+      console.log("\n this.timeout: ", this.timeout);
+
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
