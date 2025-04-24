@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error)
+    console.log("🚀 ~ GET ~ error:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), {
       status: HTTPResponseCode.INTERNAL_SERVER_ERROR,
       headers: { "Content-Type": "application/json" },
@@ -99,43 +99,19 @@ export async function POST(request: Request) {
     console.log("\n\n POST 1 --------------------------------");
     const review = await processRequestJson(request);
 
-    const reviewAnalysis = new ReviewAnalysis();
-    const responseHandler = new ReviewResponseHandler();
+    // Step 1: Insert review and get reviewId
+    const reviewId = await dbReview.insert(review);
 
-    console.log("\n\n POST 2 --------------------------------");
-    // Analyze the review and get the analysis
-    const analysis: ResponseOpenAITravelReviewAnalysis =
-      await reviewAnalysis.analyzeReview(review);
-
-    console.log("\n\n POST 3 --------------------------------");
-    // Handle the response data
-    const processedAnalysis = await responseHandler.handleResponse(
-      review,
-      analysis
-    );
-
-    console.log("\n\n POST 4 --------------------------------");
-    console.log("\n processedAnalysis: ", processedAnalysis);
-
-    // Check if the review id is UUID valid
-    if (!validateUUID(processedAnalysis.review_id)) {
+    // Step 2: Check if the review id is UUID valid
+    if (!validateUUID(reviewId)) {
       return new Response(JSON.stringify({ error: "Invalid UUID format" }), {
         status: HTTPResponseCode.BAD_REQUEST,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    console.log("\n\n POST 5 --------------------------------");
-
-    // Create HTTP response with the results analysis
-    const httpResponse: HTTPResponse<ResponseReviewInsert> = {
-      message: "Review analyzed successfully",
-      data: processedAnalysis,
-    };
-
-    console.log("\n\n POST 6 --------------------------------");
-
-    return new Response(JSON.stringify(httpResponse), {
+    // Step 3: Return a response
+    return new Response(JSON.stringify(review), {
       status: HTTPResponseCode.CREATED,
       headers: { "Content-Type": "application/json" },
     });

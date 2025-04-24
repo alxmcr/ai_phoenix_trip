@@ -1,5 +1,8 @@
 "use client";
 
+import { ReviewAnalysis } from "@/app/classes/open-ai/review-analysis";
+import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
+import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ReviewData } from "@/app/types/db/review";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,22 +73,76 @@ export default function EnhancedLeadCaptureForm() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call and processing time
+      // Step 1: Submit the review
       const reviewResponse = await fetch("/api/reviews", {
         method: "POST",
         body: JSON.stringify(formData),
       });
 
-      const review = await reviewResponse.json();
-
       setIsSubmitting(false);
       setIsSubmitted(true);
 
-      // Set the review id
-      setReviewId(review.review_id);
+      const review = await reviewResponse.json();
 
-      // Redirect to the review page
-      router.push(`/reviews/${review.review_id}`);
+      // Step 2: Get the review id
+      const review_id = review.review_id;
+
+      // Check if the review is valid
+      if (!review_id) {
+        throw new Error("Invalid review");
+      }
+
+      // Step 3: Set the review id
+      setReviewId(review_id);
+
+      // Step 4: Build the prompt for OpenAI analysis
+      const prompt = buildPromptReview(review);
+
+      // Step 5: Pass the review data and analysis it
+      const reviewAnalysis = new ReviewAnalysis();
+
+      // Step 5.1: Set the prompt
+      reviewAnalysis.setPrompt(prompt);
+      // Step 5.2: Set the review
+      reviewAnalysis.setReview(review);
+
+      // Step 5.2: Analyze the review
+      const resultsAnalysis = await reviewAnalysis.analyzeReview();
+
+      // Step 5.3: Set the results analysis
+      reviewAnalysis.setAnalysis(resultsAnalysis);
+
+      // Step 5.4: Extract the insights from the analysis
+      const analysis = reviewAnalysis.getAnalysis();
+
+      // Step 5.5: Check if the analysis is valid
+      if (!analysis) {
+        throw new Error("Analysis is not valid");
+      }
+
+      // Step 5.6: Destructure the analysis
+      const { sentiment, actionables, recommendations } = analysis;
+
+      // Step 6. Insert results analysis into the database
+      // Step 6.1: Insert the sentiment
+      await fetch("/api/sentiment", {
+        method: "POST",
+        body: JSON.stringify(sentiment),
+      });
+      // Step 6.2: Insert the actionables using Use Chunked/Batched Inserts
+      await fetch("/api/actionables", {
+        method: "POST",
+        body: JSON.stringify(actionables),
+      });
+
+      // Step 6.3: Insert the recommendations using Use Chunked/Batched Inserts
+      await fetch("/api/recommendations", {
+        method: "POST",
+        body: JSON.stringify(recommendations),
+      });
+
+      // Step 7: Redirect to the review page
+      router.push(`/reviews/${review_id}`);
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
       setIsSubmitting(false);
