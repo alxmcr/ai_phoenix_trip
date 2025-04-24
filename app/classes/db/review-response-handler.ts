@@ -21,21 +21,31 @@ export class ReviewResponseHandler {
 
   async handleInsertReview(review: ReviewData): Promise<string> {
     try {
+      console.log("\n handleInsertReview 1 --------------------------------");
       // Store the review
       const reviewCreated = await this.reviewDb.insert(review);
+
+      console.log("\n handleInsertReview 2 --------------------------------");
 
       // Check if the review was created successfully
       if (!reviewCreated) {
         throw new Error("Failed to create review");
       }
 
+      console.log("\n handleInsertReview 3 --------------------------------");
+
       // Get the review ID
       const reviewId = reviewCreated.review_id;
+
+      console.log("\n reviewId: ", reviewId);
+      console.log("\n handleInsertReview 4 --------------------------------");
 
       // Check if the review ID is valid
       if (!reviewId) {
         throw new Error("Failed to get review ID");
       }
+
+      console.log("\n handleInsertReview 5 --------------------------------");
 
       return reviewId;
     } catch (error) {
@@ -49,13 +59,19 @@ export class ReviewResponseHandler {
     analysis: ResponseOpenAITravelReviewAnalysis
   ): Promise<ResponseReviewInsert> {
     try {
+      console.log("\n handleResponse 1 --------------------------------");
+
       // Get the review ID, from the new review
       const reviewId = await this.handleInsertReview(review);
+
+      console.log("\n handleResponse 2 --------------------------------");
 
       // Check if the review ID is valid
       if (!reviewId) {
         throw new Error("Failed to get review ID");
       }
+
+      console.log("\n handleResponse 3 --------------------------------");
 
       // Execute all database operations in parallel
       const [sentiment, actionables, recommendations] = await Promise.all([
@@ -97,6 +113,8 @@ export class ReviewResponseHandler {
         ),
       ]);
 
+      console.log("\n handleResponse 4 --------------------------------");
+
       // Build the response
       const response: ResponseReviewInsert = {
         review_id: reviewId,
@@ -111,6 +129,10 @@ export class ReviewResponseHandler {
           recommendations: recommendations,
         },
       };
+
+      console.log("\n handleResponse 5 --------------------------------");
+
+      console.log("\n response: ", response);
 
       return response;
     } catch (error) {
