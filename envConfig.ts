@@ -17,7 +17,7 @@ interface EnvVariables {
   LOCAL_OPENAI_API_KEY?: string;
 
   // Database Configuration
-  DATABASE_URL?: string;
+  CONN_STRING_DB?: string;
   LOCAL_CONN_STRING_DB?: string;
 
   // Environment
@@ -32,7 +32,7 @@ export const env: EnvVariables = {
   LOCAL_OPENAI_API_KEY: process.env.LOCAL_OPENAI_API_KEY,
 
   // Database
-  DATABASE_URL: process.env.DATABASE_URL,
+  CONN_STRING_DB: process.env.CONN_STRING_DB,
   LOCAL_CONN_STRING_DB: process.env.LOCAL_CONN_STRING_DB,
 
   // Environment
@@ -49,7 +49,7 @@ export const getOpenAIApiKey = () => {
 
 export const getDatabaseConnectionString = () => {
   return process.env.NODE_ENV === 'production'
-    ? process.env.DATABASE_URL
+    ? process.env.CONN_STRING_DB
     : process.env.LOCAL_CONN_STRING_DB;
 };
 
