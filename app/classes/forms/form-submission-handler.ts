@@ -1,7 +1,9 @@
 import { TIMEOUT_CONFIG } from "@/app/config/timeouts";
 import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
+import { ActionableData } from "@/app/types/db/actionable";
 import { ReviewData } from "@/app/types/db/review";
+import { SentimentData } from "@/app/types/db/sentiment";
 import { ReviewAnalysis } from "../open-ai/review-analysis";
 import { TimingUtils } from "../utils/timing-utils";
 
@@ -49,7 +51,7 @@ export class FormSubmissionHandler {
     return analysis;
   }
 
-  private async submitSentiment(review_id: string, sentiment: any) {
+  private async submitSentiment(review_id: string, sentiment: Partial<SentimentData>) {
     TimingUtils.start("Sentiment");
     await fetch("/api/sentiment", {
       method: "POST",
@@ -58,7 +60,7 @@ export class FormSubmissionHandler {
     TimingUtils.log("Sentiment", "Sentiment submitted successfully");
   }
 
-  private async submitActionables(review_id: string, actionables: any[]) {
+  private async submitActionables(review_id: string, actionables: Partial<ActionableData>[]) {
     TimingUtils.start("Actionables");
     const actionableBatches = [];
     const batchSize = 5;
