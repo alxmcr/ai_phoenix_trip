@@ -1,8 +1,6 @@
 "use client";
 
-import { ReviewAnalysis } from "@/app/classes/open-ai/review-analysis";
-import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
-import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
+import { FormSubmissionHandler } from "@/app/classes/forms/form-submission-handler";
 import { ReviewData } from "@/app/types/db/review";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,8 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useEffect, useState, useMemo } from "react";
-import { FormSubmissionHandler } from "@/app/classes/forms/form-submission-handler";
+import { useEffect, useMemo, useState } from "react";
 
 export default function EnhancedLeadCaptureForm() {
   const router = useRouter();
