@@ -2,6 +2,7 @@ import { TIMEOUT_CONFIG } from "@/app/config/timeouts";
 import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ActionableData } from "@/app/types/db/actionable";
+import { RecommendationData } from "@/app/types/db/recommendation";
 import { ReviewData } from "@/app/types/db/review";
 import { SentimentData } from "@/app/types/db/sentiment";
 import { ReviewAnalysis } from "../open-ai/review-analysis";
@@ -83,7 +84,7 @@ export class FormSubmissionHandler {
     TimingUtils.log("Actionables", `Successfully submitted ${actionables.length} actionables`);
   }
 
-  private async submitRecommendations(review_id: string, recommendations: any[]) {
+  private async submitRecommendations(review_id: string, recommendations: Partial<RecommendationData>[]) {
     TimingUtils.start("Recommendations");
     const recommendationBatches = [];
     const batchSize = 5;
