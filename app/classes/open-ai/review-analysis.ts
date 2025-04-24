@@ -27,6 +27,7 @@ export class ReviewAnalysis {
     review: ReviewData
   ): Promise<ResponseOpenAITravelReviewAnalysis> {
     try {
+      console.time("[ReviewAnalysis] analyzeReview execution time");
       console.log("-- analyzeReview --------------------------------");
       console.log("-- analyzeReview 1 ---");
       // Build the prompt for OpenAI analysis
@@ -40,6 +41,7 @@ export class ReviewAnalysis {
       );
 
       console.log("-- analyzeReview 3 ---");
+      console.timeEnd("[ReviewAnalysis] analyzeReview execution time");
       return analysis;
     } catch (error) {
       console.log("-- analyzeReview 4 ---");
