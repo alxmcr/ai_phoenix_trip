@@ -1,10 +1,5 @@
 import { ReviewDB } from "@/app/classes/db/review-db";
-import { ReviewResponseHandler } from "@/app/classes/db/review-response-handler";
-import { ReviewAnalysis } from "@/app/classes/open-ai/review-analysis";
 import { HTTPResponseCode } from "@/app/enums/api/http-response-code";
-import { HTTPResponse } from "@/app/generics/http-response";
-import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
-import { ResponseReviewInsert } from "@/app/types/api/response-review";
 import { ReviewData } from "@/app/types/db/review";
 import { NextRequest } from "next/server";
 import { APIError } from "openai";
