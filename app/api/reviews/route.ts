@@ -70,6 +70,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error)
     return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), {
       status: HTTPResponseCode.INTERNAL_SERVER_ERROR,
       headers: { "Content-Type": "application/json" },
