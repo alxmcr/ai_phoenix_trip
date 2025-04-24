@@ -1,9 +1,9 @@
-import { ReviewAnalysis } from "../open-ai/review-analysis";
+import { TIMEOUT_CONFIG } from "@/app/config/timeouts";
 import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ReviewData } from "@/app/types/db/review";
+import { ReviewAnalysis } from "../open-ai/review-analysis";
 import { TimingUtils } from "../utils/timing-utils";
-import { TIMEOUT_CONFIG } from "@/app/config/timeouts";
 
 export class FormSubmissionHandler {
   private reviewAnalysis: ReviewAnalysis;
