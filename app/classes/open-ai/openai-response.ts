@@ -1,4 +1,4 @@
-import { openai } from "@/app/config/ai/openai-client";
+import { openai } from "@/config/ai/openai-client";
 import { OpenAIMessageRoles } from "@/app/enums/openai/openai-message-roles";
 import { OpenAIModels } from "@/app/enums/openai/openai-models";
 import { OpenAITemperatures } from "@/app/enums/openai/openai-temperatures";

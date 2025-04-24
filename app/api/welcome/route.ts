@@ -1,4 +1,4 @@
-import '@/envConfig.ts'
+import '@/envConfig'
 
 const env = process.env.NODE_ENV || 'development';
 

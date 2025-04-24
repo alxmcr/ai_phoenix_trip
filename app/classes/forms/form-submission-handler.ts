@@ -1,4 +1,4 @@
-import { TIMEOUT_CONFIG } from "@/app/config/timeouts";
+import { TIMEOUT_CONFIG } from "@/config/timeouts";
 import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ActionableData } from "@/app/types/db/actionable";
