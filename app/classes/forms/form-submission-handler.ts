@@ -3,6 +3,7 @@ import { buildPromptReview } from "@/app/helpers/ai/prompt-review";
 import { ResponseOpenAITravelReviewAnalysis } from "@/app/types/ai/openai-response";
 import { ReviewData } from "@/app/types/db/review";
 import { TimingUtils } from "../utils/timing-utils";
+import { TIMEOUT_CONFIG } from "@/app/config/timeouts";
 
 export class FormSubmissionHandler {
   private reviewAnalysis: ReviewAnalysis;
@@ -104,13 +105,11 @@ export class FormSubmissionHandler {
   }
 
   private calculateTimeout(itemsCount: number, baseTimeout: number, perItemTimeout: number): number {
-    // Ensure minimum timeout for small batches
-    const minTimeout = 3000;
-    // Calculate timeout based on number of items
     const calculatedTimeout = baseTimeout + (itemsCount * perItemTimeout);
-    // Cap the maximum timeout to prevent extremely long waits
-    const maxTimeout = 30000;
-    return Math.min(Math.max(calculatedTimeout, minTimeout), maxTimeout);
+    return Math.min(
+      Math.max(calculatedTimeout, TIMEOUT_CONFIG.LIMITS.MIN),
+      TIMEOUT_CONFIG.LIMITS.MAX
+    );
   }
 
   private async submitWithTimeout<T>(
@@ -141,6 +140,57 @@ export class FormSubmissionHandler {
     }
   }
 
+  private validateAnalysisResult(analysis: ResponseOpenAITravelReviewAnalysis): void {
+    if (!analysis) {
+      throw new Error("Analysis result is null or undefined");
+    }
+
+    if (!analysis.sentiment) {
+      throw new Error("Sentiment analysis is missing");
+    }
+
+    if (!analysis.actionables || !Array.isArray(analysis.actionables)) {
+      throw new Error("Actionables are missing or invalid");
+    }
+
+    if (!analysis.recommendations || !Array.isArray(analysis.recommendations)) {
+      throw new Error("Recommendations are missing or invalid");
+    }
+
+    // Validate sentiment structure
+    const { sentiment } = analysis;
+    if (typeof sentiment.score !== 'number' ||
+        !sentiment.label ||
+        !sentiment.summary ||
+        !sentiment.emotion_tone) {
+      throw new Error("Invalid sentiment structure");
+    }
+
+    // Validate actionables structure
+    analysis.actionables.forEach((actionable, index) => {
+      if (!actionable.title ||
+          !actionable.description ||
+          !actionable.priority ||
+          !actionable.department ||
+          !actionable.category ||
+          !actionable.source_aspect) {
+        throw new Error(`Invalid actionable structure at index ${index}`);
+      }
+    });
+
+    // Validate recommendations structure
+    analysis.recommendations.forEach((recommendation, index) => {
+      if (!recommendation.title ||
+          !recommendation.description ||
+          !recommendation.impact ||
+          !recommendation.target_area ||
+          !recommendation.effort_level ||
+          typeof recommendation.data_driven !== 'boolean') {
+        throw new Error(`Invalid recommendation structure at index ${index}`);
+      }
+    });
+  }
+
   public async handleFormSubmission(formData: ReviewData): Promise<string> {
     TimingUtils.start("Form Submission");
 
@@ -149,7 +199,7 @@ export class FormSubmissionHandler {
       const reviewResult = await this.submitWithTimeout(
         () => this.submitReview(formData),
         "Review Submission",
-        5000 // Base timeout for review submission
+        TIMEOUT_CONFIG.REVIEW_SUBMISSION.BASE
       );
 
       if (reviewResult.timedOut) {
@@ -162,12 +212,15 @@ export class FormSubmissionHandler {
       const analysisResult = await this.submitWithTimeout(
         () => this.analyzeReview(formData),
         "Analysis",
-        15000 // Base timeout for analysis
+        TIMEOUT_CONFIG.ANALYSIS.BASE
       );
 
       if (analysisResult.timedOut) {
         throw new Error("Analysis timed out - this is a critical operation");
       }
+
+      // Validate the analysis result before destructuring
+      this.validateAnalysisResult(analysisResult.result!);
 
       const { sentiment, actionables, recommendations } = analysisResult.result!;
 
@@ -176,7 +229,7 @@ export class FormSubmissionHandler {
       const sentimentResult = await this.submitWithTimeout(
         () => this.submitSentiment(review_id, sentiment),
         "Sentiment",
-        3000 // Base timeout for sentiment
+        TIMEOUT_CONFIG.SENTIMENT.BASE
       );
 
       if (sentimentResult.timedOut) {
@@ -186,14 +239,14 @@ export class FormSubmissionHandler {
       // Calculate timeouts based on number of items
       const actionablesTimeout = this.calculateTimeout(
         actionables.length,
-        3000, // Base timeout for first item
-        1000  // Additional timeout per item
+        TIMEOUT_CONFIG.ACTIONABLES.BASE,
+        TIMEOUT_CONFIG.ACTIONABLES.PER_ITEM
       );
 
       const recommendationsTimeout = this.calculateTimeout(
         recommendations.length,
-        2000, // Base timeout for first item
-        800   // Additional timeout per item
+        TIMEOUT_CONFIG.RECOMMENDATIONS.BASE,
+        TIMEOUT_CONFIG.RECOMMENDATIONS.PER_ITEM
       );
 
       // Then handle actionables and recommendations in parallel
