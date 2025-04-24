@@ -34,21 +34,32 @@ export class OpenAIResponses {
     prompt = "",
     directiveSystem = ""
   ): Promise<ResponseOpenAITravelReviewAnalysis> {
+
+    console.log("\n createResponse 1 --------------------------------");
+
     if (!directiveSystem) {
       throw new Error("Directive system is required");
     }
 
+    console.log("\n createResponse 2 --------------------------------");
     if (!prompt) {
       throw new Error("Prompt is required");
     }
+
+    console.log("\n createResponse 3 --------------------------------");
 
     if (!openai) {
       throw new Error("OpenAI client is not available");
     }
 
+
     try {
+      console.log("\n createResponse 4 --------------------------------");
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+      console.log("\n createResponse 5 --------------------------------");
 
       const response = await openai.responses.create({
         model: this.model,
@@ -136,25 +147,38 @@ export class OpenAIResponses {
         },
       }, { signal: controller.signal });
 
+
+      console.log("\n createResponse 6 --------------------------------");
       clearTimeout(timeoutId);
+
+      console.log("\n createResponse 7 --------------------------------");
 
       if (!response.output_text) {
         throw new Error("Invalid response from OpenAI");
       }
 
+      console.log("\n createResponse 8 --------------------------------");
+
       const parsedResponse: ResponseOpenAITravelReviewAnalysis = JSON.parse(response.output_text);
+
+      console.log("\n createResponse 9 --------------------------------");
       validateOpenAIResponse(parsedResponse);
 
+      console.log("\n createResponse 10 --------------------------------");
       return parsedResponse;
     } catch (error: unknown) {
+
+      console.log("\n createResponse 11 --------------------------------");
       if (error instanceof APIError) {
         throw new Error(`API Error: ${error.message}`);
       }
 
+      console.log("\n createResponse 12 --------------------------------");
       if (error instanceof Error && error.name === 'AbortError') {
         throw new Error(`Request timed out after ${this.timeout}ms`);
       }
 
+      console.log("\n createResponse 13 --------------------------------");
       throw new Error(
         `Failed to create response: ${error instanceof Error ? error.message : "Unknown error"}`
       );
