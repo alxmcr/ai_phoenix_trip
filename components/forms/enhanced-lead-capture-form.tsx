@@ -76,15 +76,7 @@ export default function EnhancedLeadCaptureForm() {
         body: JSON.stringify(formData),
       });
 
-      if (!reviewResponse.ok) {
-        throw new Error("Failed to submit review");
-      }
-
       const review = await reviewResponse.json();
-
-      if (!review.review_id) {
-        throw new Error("Failed to submit review");
-      }
 
       setIsSubmitting(false);
       setIsSubmitted(true);
