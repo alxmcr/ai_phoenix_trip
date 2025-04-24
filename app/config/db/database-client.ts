@@ -6,8 +6,8 @@ const env = process.env.NODE_ENV || "development";
 const isProduction = env === "production";
 
 const connectionString = isProduction
-  ? process.env.NEON_DATABASE_URL
-  : process.env.SUPABASE_DATABASE_URL;
+  ? process.env.REMOTE_CONN_STRING_DB
+  : process.env.LOCAL_CONN_STRING_DB;
 
 if (!connectionString) {
   throw new Error("DATABASE_URL environment variable is not set");
