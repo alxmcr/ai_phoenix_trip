@@ -10,24 +10,18 @@ export interface ResponseOptions {
   model?: OpenAIModels;
   temperature?: OpenAITemperatures;
   maxTokens?: number;
-  format?: "json" | "text";
-  timeout?: number;
 }
 
 export class OpenAIResponses {
   private model: OpenAIModels;
   private temperature: OpenAITemperatures;
   private maxTokens: number;
-  private format: "json" | "text";
-  private timeout: number;
 
   constructor(options: ResponseOptions = {}) {
     this.model = options.model || OpenAIModels.GPT_4_O_MINI;
     this.temperature =
       options.temperature || OpenAITemperatures.BALANCED_CREATIVE;
     this.maxTokens = options.maxTokens || 1000;
-    this.format = options.format || "text";
-    this.timeout = options.timeout || 30000;
   }
 
   async createResponse(
@@ -52,16 +46,8 @@ export class OpenAIResponses {
       throw new Error("OpenAI client is not available");
     }
 
-
     try {
       console.log("\n createResponse 4 --------------------------------");
-      console.log("\n this.timeout: ", this.timeout);
-
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-
-      console.log("\n createResponse 5 --------------------------------");
 
       const response = await openai.responses.create({
         model: this.model,
@@ -147,40 +133,35 @@ export class OpenAIResponses {
             },
           },
         },
-      }, { signal: controller.signal });
+      }, { timeout: 30000 }); // Using a fixed 30-second timeout
 
-
-      console.log("\n createResponse 6 --------------------------------");
-      clearTimeout(timeoutId);
-
-      console.log("\n createResponse 7 --------------------------------");
+      console.log("\n createResponse 5 --------------------------------");
 
       if (!response.output_text) {
         throw new Error("Invalid response from OpenAI");
       }
 
-      console.log("\n createResponse 8 --------------------------------");
+      console.log("\n createResponse 6 --------------------------------");
 
       const parsedResponse: ResponseOpenAITravelReviewAnalysis = JSON.parse(response.output_text);
 
-      console.log("\n createResponse 9 --------------------------------");
+      console.log("\n createResponse 7 --------------------------------");
       validateOpenAIResponse(parsedResponse);
 
-      console.log("\n createResponse 10 --------------------------------");
+      console.log("\n createResponse 8 --------------------------------");
       return parsedResponse;
     } catch (error: unknown) {
-
-      console.log("\n createResponse 11 --------------------------------");
+      console.log("\n createResponse 9 --------------------------------");
       if (error instanceof APIError) {
         throw new Error(`API Error: ${error.message}`);
       }
 
-      console.log("\n createResponse 12 --------------------------------");
-      if (error instanceof Error && error.name === 'AbortError') {
-        throw new Error(`Request timed out after ${this.timeout}ms`);
+      console.log("\n createResponse 10 --------------------------------");
+      if (error instanceof Error && error.message.includes('timeout')) {
+        throw new Error('Request timed out after 30 seconds');
       }
 
-      console.log("\n createResponse 13 --------------------------------");
+      console.log("\n createResponse 11 --------------------------------");
       throw new Error(
         `Failed to create response: ${error instanceof Error ? error.message : "Unknown error"}`
       );
