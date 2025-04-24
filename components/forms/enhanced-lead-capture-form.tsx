@@ -296,6 +296,7 @@ export default function EnhancedLeadCaptureForm() {
             type="date"
             required
             value={formData.start_date}
+            max={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
           />
         </div>
@@ -308,6 +309,7 @@ export default function EnhancedLeadCaptureForm() {
             type="date"
             required
             value={formData.end_date}
+            max={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
           />
         </div>
