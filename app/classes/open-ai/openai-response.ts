@@ -31,22 +31,27 @@ export class OpenAIResponses {
     prompt = "",
     directiveSystem = ""
   ): Promise<ResponseOpenAITravelReviewAnalysis> {
+    console.log("-- createResponse --------------------------------");
     // Validate the directive system
     if (!directiveSystem) {
       throw new Error("Directive system is required");
     }
+    console.log("-- createResponse 1 ---");
 
     // Validate the prompt
     if (!prompt) {
       throw new Error("Prompt is required");
     }
+    console.log("-- createResponse 2 ---");
 
     // Validate the OpenAI client
     if (!openai) {
       throw new Error("OpenAI client is not available");
     }
+    console.log("-- createResponse 3 ---");
 
     try {
+      console.log("-- createResponse 4 ---");
       const response = await openai.responses.create({
         model: this.model,
         input: [
@@ -132,22 +137,30 @@ export class OpenAIResponses {
           },
         },
       });
+      console.log("-- createResponse 5 ---");
 
       // Check if the response is valid JSON
       if (!response.output_text) {
         throw new Error("Invalid JSON response from OpenAI");
-      }
 
+      }
+      console.log("-- createResponse 6 ---");
       // Make sure the response text can be parsed as JSON
       const parsedResponse: ResponseOpenAITravelReviewAnalysis = JSON.parse(
         response.output_text
       );
 
       // Validate the parsed response using Zod schema
+      console.log("-- createResponse 7 ---");
       validateOpenAIResponse(parsedResponse);
+
+      console.log("-- createResponse 8 ---");
 
       return parsedResponse;
     } catch (error) {
+      console.log("-- createResponse 9 ---");
+      console.log("🚀 ~ OpenAIResponses ~ error:", error);
+
       if (error instanceof APIError) {
         throw new Error("API Error: " + error.message);
       }

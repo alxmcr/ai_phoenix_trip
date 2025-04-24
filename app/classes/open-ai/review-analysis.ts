@@ -26,17 +26,24 @@ export class ReviewAnalysis {
     review: ReviewData
   ): Promise<ResponseOpenAITravelReviewAnalysis> {
     try {
+      console.log("-- analyzeReview --------------------------------");
+      console.log("-- analyzeReview 1 ---")
       // Build the prompt for OpenAI analysis
       const prompt = buildPromptReview(review);
 
+      console.log("-- analyzeReview 2 ---");
       // Get OpenAI analysis
       const analysis = await this.openAIResponses.createResponse(
         prompt,
         this.directiveSystem
       );
 
+      console.log("-- analyzeReview 3 ---");
       return analysis;
     } catch (error) {
+      console.log("-- analyzeReview 4 ---");
+      console.log("🚀 ~ ReviewAnalysis ~ error:", error);
+
       if (error instanceof APIError) {
         throw new Error("API Error: " + error.message);
       }

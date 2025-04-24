@@ -44,13 +44,18 @@ export class ReviewResponseHandler {
     analysis: ResponseOpenAITravelReviewAnalysis
   ): Promise<ResponseReviewInsert> {
     try {
+      console.log("-- handleResponse --------------------------------");
       // Get the review ID, from the new review
       const reviewId = await this.handleInsertReview(review);
+
+      console.log("-- handleResponse: 1 ---");
 
       // Check if the review ID is valid
       if (!reviewId) {
         throw new Error("Failed to get review ID");
       }
+
+      console.log("-- handleResponse: 2 ---");
 
       // Store the sentiment analysis
       const sentiment = await this.sentimentDb.insert({
@@ -60,6 +65,8 @@ export class ReviewResponseHandler {
         summary: analysis.sentiment.summary,
         emotion_tone: analysis.sentiment.emotion_tone,
       });
+
+      console.log("-- handleResponse: 3 ---");
 
       // Store the actionables
       const actionables = await Promise.all(
@@ -76,6 +83,8 @@ export class ReviewResponseHandler {
         )
       );
 
+      console.log("-- handleResponse: 4 ---");
+
       // Store the recommendations
       const recommendations = await Promise.all(
         analysis.recommendations.map((recommendation) =>
@@ -90,6 +99,8 @@ export class ReviewResponseHandler {
           })
         )
       );
+
+      console.log("-- handleResponse: 5 ---");
 
       // Build the response
       const response: ResponseReviewInsert = {
@@ -106,10 +117,17 @@ export class ReviewResponseHandler {
         },
       };
 
+      console.log("-- handleResponse: 6 ---");
+
       return response;
     } catch (error) {
+      console.log("-- handleResponse: 7 ---");
+      console.log("🚀 ~ ReviewResponseHandler ~ error:", error);
+
       throw new Error(
-        `Failed to handle review response: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to handle review response: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }

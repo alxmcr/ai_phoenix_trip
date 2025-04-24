@@ -96,20 +96,25 @@ async function processRequestJson(request: Request): Promise<ReviewData> {
 
 export async function POST(request: Request) {
   try {
+    console.log("\n\n POST 1 --------------------------------");
     const review = await processRequestJson(request);
 
     const reviewAnalysis = new ReviewAnalysis();
     const responseHandler = new ReviewResponseHandler();
 
+    console.log("\n\n POST 2 --------------------------------");
     // Analyze the review and get the analysis
     const analysis: ResponseOpenAITravelReviewAnalysis =
       await reviewAnalysis.analyzeReview(review);
 
+    console.log("\n\n POST 3 --------------------------------");
     // Handle the response data
     const processedAnalysis = await responseHandler.handleResponse(
       review,
       analysis
     );
+
+    console.log("\n\n POST 4 --------------------------------");
 
     // Check if the review id is UUID valid
     if (!validateUUID(processedAnalysis.review_id)) {
@@ -119,11 +124,15 @@ export async function POST(request: Request) {
       });
     }
 
+    console.log("\n\n POST 5 --------------------------------");
+
     // Create HTTP response with the results analysis
     const httpResponse: HTTPResponse<ResponseReviewInsert> = {
       message: "Review analyzed successfully",
       data: processedAnalysis,
     };
+
+    console.log("\n\n POST 6 --------------------------------");
 
     return new Response(JSON.stringify(httpResponse), {
       status: HTTPResponseCode.CREATED,
