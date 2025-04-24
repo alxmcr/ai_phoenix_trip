@@ -1,16 +1,10 @@
-import "@/envConfig.ts";
+import { getDatabaseConnectionString } from "@/envConfig";
 import postgres from "postgres";
 
-const env = process.env.NODE_ENV || "development";
-
-const isProduction = env === "production";
-
-const connectionString = isProduction
-  ? process.env.REMOTE_CONN_STRING_DB
-  : process.env.LOCAL_CONN_STRING_DB;
+const connectionString = getDatabaseConnectionString();
 
 if (!connectionString) {
-  throw new Error("DATABASE_URL environment variable is not set");
+  throw new Error("Database connection string is not set");
 }
 
 const sql = postgres(connectionString, {

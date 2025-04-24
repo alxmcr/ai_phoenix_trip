@@ -1,16 +1,10 @@
-import "@/envConfig.ts";
+import { getOpenAIApiKey } from "@/envConfig";
 import { OpenAI } from "openai";
 
-const env = process.env.NODE_ENV || "development";
-
-const isProduction = env === "production";
-
-const openai_key = isProduction
-  ? process.env.OPENAI_API_KEY
-  : process.env.OPENAI_API_KEY_DEV;
+const openai_key = getOpenAIApiKey();
 
 if (!openai_key) {
-  throw new Error("OPENAI_API_KEY is not set");
+  throw new Error("OpenAI API key is not set");
 }
 
 export const openai = new OpenAI({
