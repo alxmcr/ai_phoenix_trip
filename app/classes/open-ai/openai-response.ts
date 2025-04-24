@@ -11,6 +11,7 @@ export interface ResponseOptions {
   temperature?: OpenAITemperatures;
   maxTokens?: number;
   format?: "json" | "text";
+  timeout?: number;
 }
 
 export class OpenAIResponses {
@@ -18,6 +19,7 @@ export class OpenAIResponses {
   private temperature: OpenAITemperatures;
   private maxTokens: number;
   private format: "json" | "text";
+  private timeout: number;
 
   constructor(options: ResponseOptions = {}) {
     this.model = options.model || OpenAIModels.GPT_4_O_MINI;
@@ -25,33 +27,40 @@ export class OpenAIResponses {
       options.temperature || OpenAITemperatures.BALANCED_CREATIVE;
     this.maxTokens = options.maxTokens || 1000;
     this.format = options.format || "text";
+    this.timeout = options.timeout || 30000;
   }
 
   async createResponse(
     prompt = "",
     directiveSystem = ""
   ): Promise<ResponseOpenAITravelReviewAnalysis> {
-    console.log("-- createResponse --------------------------------");
-    // Validate the directive system
+
+    console.log("\n createResponse 1 --------------------------------");
+
     if (!directiveSystem) {
       throw new Error("Directive system is required");
     }
-    console.log("-- createResponse 1 ---");
 
-    // Validate the prompt
+    console.log("\n createResponse 2 --------------------------------");
     if (!prompt) {
       throw new Error("Prompt is required");
     }
-    console.log("-- createResponse 2 ---");
 
-    // Validate the OpenAI client
+    console.log("\n createResponse 3 --------------------------------");
+
     if (!openai) {
       throw new Error("OpenAI client is not available");
     }
-    console.log("-- createResponse 3 ---");
+
 
     try {
-      console.log("-- createResponse 4 ---");
+      console.log("\n createResponse 4 --------------------------------");
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+      console.log("\n createResponse 5 --------------------------------");
+
       const response = await openai.responses.create({
         model: this.model,
         input: [
@@ -136,39 +145,42 @@ export class OpenAIResponses {
             },
           },
         },
-      });
-      console.log("-- createResponse 5 ---");
+      }, { signal: controller.signal });
 
-      // Check if the response is valid JSON
+
+      console.log("\n createResponse 6 --------------------------------");
+      clearTimeout(timeoutId);
+
+      console.log("\n createResponse 7 --------------------------------");
+
       if (!response.output_text) {
-        throw new Error("Invalid JSON response from OpenAI");
-
+        throw new Error("Invalid response from OpenAI");
       }
-      console.log("-- createResponse 6 ---");
-      // Make sure the response text can be parsed as JSON
-      const parsedResponse: ResponseOpenAITravelReviewAnalysis = JSON.parse(
-        response.output_text
-      );
 
-      // Validate the parsed response using Zod schema
-      console.log("-- createResponse 7 ---");
+      console.log("\n createResponse 8 --------------------------------");
+
+      const parsedResponse: ResponseOpenAITravelReviewAnalysis = JSON.parse(response.output_text);
+
+      console.log("\n createResponse 9 --------------------------------");
       validateOpenAIResponse(parsedResponse);
 
-      console.log("-- createResponse 8 ---");
-
+      console.log("\n createResponse 10 --------------------------------");
       return parsedResponse;
-    } catch (error) {
-      console.log("-- createResponse 9 ---");
-      console.log("🚀 ~ OpenAIResponses ~ error:", error);
+    } catch (error: unknown) {
 
+      console.log("\n createResponse 11 --------------------------------");
       if (error instanceof APIError) {
-        throw new Error("API Error: " + error.message);
+        throw new Error(`API Error: ${error.message}`);
       }
 
+      console.log("\n createResponse 12 --------------------------------");
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error(`Request timed out after ${this.timeout}ms`);
+      }
+
+      console.log("\n createResponse 13 --------------------------------");
       throw new Error(
-        `Failed to create response: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
+        `Failed to create response: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
