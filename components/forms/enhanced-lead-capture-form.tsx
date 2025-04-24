@@ -11,7 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { FormSubmissionHandler } from "@/app/classes/forms/form-submission-handler";
 
 export default function EnhancedLeadCaptureForm() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function EnhancedLeadCaptureForm() {
     "Analyzing your trip experience"
   );
   const [loadingStep, setLoadingStep] = useState(0);
+  const formSubmissionHandler = useMemo(() => new FormSubmissionHandler(), []);
 
   // Update the form state to include all fields
   const [formData, setFormData] = useState<Partial<ReviewData>>({
@@ -73,107 +75,12 @@ export default function EnhancedLeadCaptureForm() {
     setIsSubmitting(true);
 
     try {
-      // Step 1: Submit the review
-      const reviewResponse = await fetch("/api/reviews", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      });
-
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-
-      const review = await reviewResponse.json();
-
-      // Step 2: Get the review id
-      const review_id = review.review_id;
-
-      // Check if the review is valid
-      if (!review_id) {
-        throw new Error("Invalid review");
-      }
-
-      // Step 3: Set the review id
+      const review_id = await formSubmissionHandler.handleFormSubmission(formData as ReviewData);
       setReviewId(review_id);
-
-      // Step 4: Build the prompt for OpenAI analysis
-      const prompt = buildPromptReview(review);
-
-      // Step 5: Pass the review data and analysis it
-      const reviewAnalysis = new ReviewAnalysis();
-
-      // Step 5.1: Set the prompt
-      reviewAnalysis.setPrompt(prompt);
-      // Step 5.2: Set the review
-      reviewAnalysis.setReview(review);
-
-      // Step 5.2: Analyze the review
-      const resultsAnalysis = await reviewAnalysis.analyzeReview();
-
-      // Step 5.3: Set the results analysis
-      reviewAnalysis.setAnalysis(resultsAnalysis);
-
-      // Step 5.4: Extract the insights from the analysis
-      const analysis = reviewAnalysis.getAnalysis();
-
-      // Step 5.5: Check if the analysis is valid
-      if (!analysis) {
-        throw new Error("Analysis is not valid");
-      }
-
-      // Step 5.6: Destructure the analysis
-      const { sentiment, actionables, recommendations } = analysis;
-
-      // Step 6. Insert results analysis into the database
-      // Step 6.1: Insert the sentiment
-      await fetch("/api/sentiment", {
-        method: "POST",
-        body: JSON.stringify(sentiment),
-      });
-      // Step 6.2: Insert the actionables in parallel batches
-      const actionableBatches = [];
-      const batchSize = 5; // Process 5 items at a time
-
-      for (let i = 0; i < actionables.length; i += batchSize) {
-        const batch = actionables.slice(i, i + batchSize);
-        const batchPromises = batch.map(actionable =>
-          fetch("/api/actionables", {
-            method: "POST",
-            body: JSON.stringify({
-              ...actionable,
-              review_id: review_id
-            }),
-          })
-        );
-        actionableBatches.push(Promise.all(batchPromises));
-      }
-
-      // Wait for all batches to complete
-      await Promise.all(actionableBatches);
-
-      // Step 6.3: Insert the recommendations in parallel batches
-      const recommendationBatches = [];
-
-      for (let i = 0; i < recommendations.length; i += batchSize) {
-        const batch = recommendations.slice(i, i + batchSize);
-        const batchPromises = batch.map(recommendation =>
-          fetch("/api/recommendations", {
-            method: "POST",
-            body: JSON.stringify({
-              ...recommendation,
-              review_id: review_id
-            }),
-          })
-        );
-        recommendationBatches.push(Promise.all(batchPromises));
-      }
-
-      // Wait for all batches to complete
-      await Promise.all(recommendationBatches);
-
-      // Step 7: Redirect to the review page
+      setIsSubmitted(true);
       router.push(`/reviews/${review_id}`);
     } catch (error) {
-      console.log("🚀 ~ handleSubmit ~ error:", error);
+      console.error("Form submission error:", error);
       setIsSubmitting(false);
     }
   };
