@@ -129,17 +129,46 @@ export default function EnhancedLeadCaptureForm() {
         method: "POST",
         body: JSON.stringify(sentiment),
       });
-      // Step 6.2: Insert the actionables using Use Chunked/Batched Inserts
-      await fetch("/api/actionables", {
-        method: "POST",
-        body: JSON.stringify(actionables),
-      });
+      // Step 6.2: Insert the actionables in parallel batches
+      const actionableBatches = [];
+      const batchSize = 5; // Process 5 items at a time
 
-      // Step 6.3: Insert the recommendations using Use Chunked/Batched Inserts
-      await fetch("/api/recommendations", {
-        method: "POST",
-        body: JSON.stringify(recommendations),
-      });
+      for (let i = 0; i < actionables.length; i += batchSize) {
+        const batch = actionables.slice(i, i + batchSize);
+        const batchPromises = batch.map(actionable =>
+          fetch("/api/actionables", {
+            method: "POST",
+            body: JSON.stringify({
+              ...actionable,
+              review_id: review_id
+            }),
+          })
+        );
+        actionableBatches.push(Promise.all(batchPromises));
+      }
+
+      // Wait for all batches to complete
+      await Promise.all(actionableBatches);
+
+      // Step 6.3: Insert the recommendations in parallel batches
+      const recommendationBatches = [];
+
+      for (let i = 0; i < recommendations.length; i += batchSize) {
+        const batch = recommendations.slice(i, i + batchSize);
+        const batchPromises = batch.map(recommendation =>
+          fetch("/api/recommendations", {
+            method: "POST",
+            body: JSON.stringify({
+              ...recommendation,
+              review_id: review_id
+            }),
+          })
+        );
+        recommendationBatches.push(Promise.all(batchPromises));
+      }
+
+      // Wait for all batches to complete
+      await Promise.all(recommendationBatches);
 
       // Step 7: Redirect to the review page
       router.push(`/reviews/${review_id}`);
